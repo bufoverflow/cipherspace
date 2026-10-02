@@ -1,0 +1,42 @@
+CIPHERSPACE
+Chapter 1: The Empty Ship | v0.1.0
+
+Discover the ship, read its secret notes, repair it, and fly to the Moon.
+This opening chapter ends before meeting the alien.
+
+PLAYER SETUP
+Choose 1-8 letters, A-Z. Use the D-pad to move around the alphabet grid.
+A adds the selected letter; B deletes. Start or DONE confirms the name.
+The saved name appears on the title screen, in the backyard, and in pause.
+Fresh games and New Trip ask for a name. Older version 1 saves retain their
+progress and ask for a name before continuing.
+
+CONTROLS
+Left/Right: pick a letter or symbol. Up/Down: select a message position.
+A: choose or continue. B: undo (or Later in HI when there is no undo).
+Select: free word and puzzle help. Start: pause and save current progress.
+In flight, use the arrows to steer; release to stop. Arrival is automatic.
+In pause, B toggles sound. New Trip asks for a two-second A+B hold.
+
+FLASH YOUR DEVDAY CARTRIDGE
+Use the official ModRetro setup instructions if developer mode is not enabled:
+https://support.modretro.com/en_us/chromatic-devday-edition-quickstart-guid-By1iOlcMg
+
+Install the official CLI, if needed (Node.js 18 or newer):
+  npm install --global @modretro/chromatic-cli@1.2.1
+
+Insert the DevDay cartridge, power on the Chromatic, and connect USB.
+From this extracted folder, run:
+  chromatic-cli list-devices
+  chromatic-cli detect-cart --all
+  chromatic-cli write-homebrew ./cipherspace.gbc --expect-sha256 efc756e8772471f29ca6f95a8c62332f9ad59b34acfbf2186b5a856ad27d3dd0
+
+Writing replaces the current game on the cartridge. Review the detected
+cartridge before accepting the CLI's confirmation. The write is verified.
+Then disconnect USB, power-cycle, and test controls, sound, saved name and progress.
+
+VALIDATION
+Native Game Boy Color ROM: 128 KiB, MBC5, 8 KiB battery RAM.
+123 emulator checks passed. The report records the exact ROM digest.
+Hardware validation remains pending; no Chromatic was connected at release.
+The preview contains actual emulator frames.

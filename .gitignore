@@ -1,0 +1,8 @@
+# This workspace also holds personal documents; only the game project is tracked.
+/*
+!/.gitignore
+!/README.md
+!/game/
+!/design-assets/
+
+.DS_Store

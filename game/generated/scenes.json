@@ -1,0 +1,352 @@
+{
+  "source": "../design-assets/opening-scenes-v2.png",
+  "sourceSha256": "80c2ce373ae5d85077a09ca973cd9aa2a0f7c678c18c729d75fb8efdcd85dd84",
+  "sourceDimensions": {
+    "width": 1586,
+    "height": 992
+  },
+  "converter": "tools/convert-scenes.cjs",
+  "sharpVersion": "0.35.4",
+  "resize": "Lanczos3, exact 160 x 96 fit",
+  "quantization": "RGB555, weighted Oklab, 4 colors per tile palette, 7 palette groups, 3 deterministic starts",
+  "dither": false,
+  "reservedUIPalette": 7,
+  "scenes": [
+    {
+      "index": 0,
+      "name": "crashed-yard",
+      "bank": 2,
+      "width": 160,
+      "height": 96,
+      "crop": {
+        "left": 0,
+        "top": 0,
+        "width": 793,
+        "height": 496
+      },
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "paletteColorCounts": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "paletteTileCounts": [
+        110,
+        4,
+        11,
+        48,
+        15,
+        3,
+        49
+      ],
+      "palettesRGB555": [
+        [
+          3137,
+          6309,
+          7432,
+          7567
+        ],
+        [
+          4193,
+          7496,
+          12875,
+          25486
+        ],
+        [
+          9449,
+          7503,
+          7637,
+          10909
+        ],
+        [
+          3104,
+          6242,
+          12452,
+          16648
+        ],
+        [
+          9346,
+          15558,
+          17904,
+          24310
+        ],
+        [
+          0,
+          5285,
+          14794,
+          23341
+        ],
+        [
+          3104,
+          6275,
+          8490,
+          15856
+        ]
+      ],
+      "totalAssetBytes": 4136,
+      "weightedOklabError": 39.37177741,
+      "rgbRootMeanSquaredError": 14.029,
+      "cSha256": "a76fd67a8a2167f6aca25b0fc20479ac45229e696a7ae0afe0a555eb6864c027",
+      "validation": "Passed: 240 tiles, 3840 tile bytes, 240 attributes in 0..6, 7 x 4 RGB555 colors, emitted C round trip, 15360 reconstructed pixels."
+    },
+    {
+      "index": 1,
+      "name": "restored-yard",
+      "bank": 3,
+      "width": 160,
+      "height": 96,
+      "crop": {
+        "left": 793,
+        "top": 0,
+        "width": 793,
+        "height": 496
+      },
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "paletteColorCounts": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "paletteTileCounts": [
+        59,
+        3,
+        24,
+        16,
+        17,
+        52,
+        69
+      ],
+      "palettesRGB555": [
+        [
+          6275,
+          7399,
+          7500,
+          6578
+        ],
+        [
+          10637,
+          18993,
+          19149,
+          26480
+        ],
+        [
+          10370,
+          14533,
+          17837,
+          23288
+        ],
+        [
+          8457,
+          7567,
+          8758,
+          11997
+        ],
+        [
+          6276,
+          11659,
+          19021,
+          21238
+        ],
+        [
+          4161,
+          7397,
+          8556,
+          14899
+        ],
+        [
+          1024,
+          3104,
+          7299,
+          14566
+        ]
+      ],
+      "totalAssetBytes": 4136,
+      "weightedOklabError": 43.84404948,
+      "rgbRootMeanSquaredError": 14.963,
+      "cSha256": "60a06aa07a748baa3db1660c1b7bee2d4a93d0b755016c85a7560a9acca1031f",
+      "validation": "Passed: 240 tiles, 3840 tile bytes, 240 attributes in 0..6, 7 x 4 RGB555 colors, emitted C round trip, 15360 reconstructed pixels."
+    },
+    {
+      "index": 2,
+      "name": "empty-cockpit",
+      "bank": 4,
+      "width": 160,
+      "height": 96,
+      "crop": {
+        "left": 0,
+        "top": 496,
+        "width": 793,
+        "height": 496
+      },
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "paletteColorCounts": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "paletteTileCounts": [
+        59,
+        24,
+        2,
+        52,
+        49,
+        18,
+        36
+      ],
+      "palettesRGB555": [
+        [
+          2080,
+          4161,
+          6307,
+          8456
+        ],
+        [
+          6340,
+          10633,
+          17042,
+          24463
+        ],
+        [
+          8559,
+          6645,
+          14076,
+          26591
+        ],
+        [
+          3104,
+          6275,
+          10570,
+          13809
+        ],
+        [
+          6308,
+          9546,
+          12785,
+          19193
+        ],
+        [
+          3104,
+          9347,
+          14534,
+          22166
+        ],
+        [
+          3137,
+          6309,
+          11660,
+          18102
+        ]
+      ],
+      "totalAssetBytes": 4136,
+      "weightedOklabError": 47.84604363,
+      "rgbRootMeanSquaredError": 15.927,
+      "cSha256": "1e034c9e14a732b51dedb738b7649d5f3df92d0f846dc00518623f280bb3fbb5",
+      "validation": "Passed: 240 tiles, 3840 tile bytes, 240 attributes in 0..6, 7 x 4 RGB555 colors, emitted C round trip, 15360 reconstructed pixels."
+    },
+    {
+      "index": 3,
+      "name": "lunar-landing",
+      "bank": 5,
+      "width": 160,
+      "height": 96,
+      "crop": {
+        "left": 793,
+        "top": 496,
+        "width": 793,
+        "height": 496
+      },
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "paletteColorCounts": [
+        4,
+        4,
+        4,
+        4,
+        4,
+        4,
+        4
+      ],
+      "paletteTileCounts": [
+        25,
+        74,
+        39,
+        12,
+        77,
+        1,
+        12
+      ],
+      "palettesRGB555": [
+        [
+          9446,
+          15821,
+          20084,
+          21275
+        ],
+        [
+          2048,
+          3104,
+          8323,
+          16779
+        ],
+        [
+          3104,
+          10437,
+          17835,
+          24145
+        ],
+        [
+          4193,
+          8453,
+          13742,
+          21140
+        ],
+        [
+          8356,
+          14665,
+          19917,
+          23121
+        ],
+        [
+          9681,
+          19094,
+          25451,
+          27544
+        ],
+        [
+          7332,
+          12650,
+          18957,
+          21199
+        ]
+      ],
+      "totalAssetBytes": 4136,
+      "weightedOklabError": 37.14816504,
+      "rgbRootMeanSquaredError": 14.254,
+      "cSha256": "abc13182d78686f95b74c623b309d74f04c155042c01abe0299e5c78e074e218",
+      "validation": "Passed: 240 tiles, 3840 tile bytes, 240 attributes in 0..6, 7 x 4 RGB555 colors, emitted C round trip, 15360 reconstructed pixels."
+    }
+  ]
+}
