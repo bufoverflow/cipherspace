@@ -17,11 +17,14 @@ typedef struct {
 extern Game game;
 extern uint8_t ui_mode, selection, slot, choice, hint_step, word_index, wrong, has_save;
 extern uint8_t name_choice, name_length, name_error;
+extern uint8_t launch_count, render_tile_offset;
+extern uint16_t render_art_palettes[28];
 extern const char letters[8];
 extern const uint8_t words[3][4], lengths[3], options[3][4], option_counts[3];
-extern const uint8_t font_bits[512], glyph_bits[56], ui_tiles[2160], sprite_tiles[128];
+extern const uint8_t font_bits[512], glyph_bits[56], ui_tiles[2304], sprite_tiles[128];
 extern const uint8_t big_font_tiles[4096], big_glyph_tiles[448];
 extern const uint16_t ui_palette[4];
+extern const uint16_t ui_screen_palettes[32];
 extern uint8_t bgtiles[360], bgattrs[360];
 uint8_t puzzle_id(void);
 uint8_t can_undo(void);

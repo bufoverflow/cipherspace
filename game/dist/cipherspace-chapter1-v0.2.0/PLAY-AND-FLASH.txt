@@ -1,32 +1,4 @@
-"""Package only a ROM whose digest matches its completed emulator playthrough."""
-import hashlib
-import json
-import os
-import shutil
-import zipfile
-from pathlib import Path
-
-root = Path(__file__).resolve().parents[1]
-build = Path(os.environ.get('CIPHERSPACE_BUILD_DIR', 'build'))
-if not build.is_absolute():
-    build = root / build
-build = build.resolve()
-rom = build / 'cipherspace.gbc'
-report = build / 'playthrough-report.json'
-preview = build / 'screenshots/ux-contact-sheet.png'
-digest = hashlib.sha256(rom.read_bytes()).hexdigest()
-evidence = json.loads(report.read_text())
-assert evidence['rom_sha256'] == digest, 'Run make test for this ROM before packaging.'
-audit = evidence['frame_audit']
-assert audit['frames_observed'] > 0 and audit['lcd_disabled_frames'] == audit['uniform_frames'] == 0
-assert preview.is_file(), 'The tested build must include its UX preview.'
-release = root / 'dist/cipherspace-chapter1-v0.2.0'
-release.mkdir(parents=True, exist_ok=True)
-shutil.copy2(rom, release / rom.name)
-shutil.copy2(report, release / report.name)
-shutil.copy2(preview, release / 'preview.png')
-(release / 'SHA256SUMS').write_text(f'{digest}  {rom.name}\n')
-(release / 'PLAY-AND-FLASH.txt').write_text(f'''CIPHERSPACE
+CIPHERSPACE
 Chapter 1: The Empty Ship | v0.2.0
 
 Discover the ship, read its secret notes, repair it, and fly to the Moon.
@@ -67,7 +39,7 @@ Insert the DevDay cartridge, power on the Chromatic, and connect USB.
 From this extracted folder, run:
   chromatic-cli list-devices
   chromatic-cli detect-cart --all
-  chromatic-cli write-homebrew ./cipherspace.gbc --expect-sha256 {digest}
+  chromatic-cli write-homebrew ./cipherspace.gbc --expect-sha256 c9e2e7ab4eb9aefae29ea1beca2f0faa504ae4b54f9bff31df5326731be466b0
 
 Writing replaces the current game on the cartridge. Review the detected
 cartridge before accepting the CLI's confirmation. The write is verified.
@@ -75,20 +47,8 @@ Then disconnect USB, power-cycle, and test controls, sound, saved name and progr
 
 VALIDATION
 Native Game Boy Color ROM: 128 KiB, MBC5, 8 KiB battery RAM.
-{evidence['checks_passed']} emulator checks passed. The report records the exact ROM digest.
-{audit['frames_observed']} consecutive gameplay frames were checked for display blanking:
+141 emulator checks passed. The report records the exact ROM digest.
+4298 consecutive gameplay frames were checked for display blanking:
 zero blank frames and zero frames with the LCD disabled.
 This build has emulator verification; native cartridge validation is pending.
 The preview contains actual emulator frames.
-''')
-archive = release.parent / (release.name + '.zip')
-with zipfile.ZipFile(archive, 'w', compression=zipfile.ZIP_DEFLATED) as z:
-    for file in sorted(release.iterdir()):
-        info = zipfile.ZipInfo(release.name + '/' + file.name)
-        info.compress_type = zipfile.ZIP_DEFLATED
-        info.external_attr = 0o100644 << 16
-        z.writestr(info, file.read_bytes())
-with zipfile.ZipFile(archive) as z:
-    assert z.testzip() is None
-    assert hashlib.sha256(z.read(release.name + '/' + rom.name)).hexdigest() == digest
-print(f'Release: {archive}\nROM: {release / rom.name}\nSHA-256: {digest}')

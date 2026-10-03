@@ -28,6 +28,10 @@ The game includes sound and cartridge saving. The ROM targets Game Boy Color wit
 - Three original substitution-cipher exercises: decode OPEN, decode MOON, and optionally encode HI.
 - A consistent key, repeated-symbol discovery, free hints, and simple word definitions.
 - Gentle steering, automatic Moon arrival, short sound cues, and two checked save records for recovery from an interrupted write.
+- Clearer letter spacing and contrast, a mint cipher key panel, separate labels for the secret note and your answer, and rounded story callouts.
+- Immediate wrong-answer feedback with a red answer box and "THAT DOESN'T MATCH" message. You can change the answer or undo it.
+- A full-screen 3, 2, 1, GO! launch countdown. Button presses cannot skip it; a restart during the countdown returns to the launch prompt.
+- Buffered screen updates that keep the LCD on and remove the white flash during navigation.
 
 This release is the playable opening chapter. The alien encounter, earned transmission hints, and the Mars-to-distant-home journey remain future chapters.
 
@@ -45,9 +49,18 @@ make -C game test
 game/.venv/bin/python -m pyboy game/build/cipherspace.gbc
 ```
 
-The output is `game/build/cipherspace.gbc`. The build uses GBDK 4.5.0 at `game/.tools/gbdk`; override it with `make -C game GBDK=/absolute/path/to/gbdk`. It also runs the ROM header check. `make test` runs `game/tests/playthrough.py` using PyBoy 2.6.1.
+The output is `game/build/cipherspace.gbc`. The build uses GBDK 4.5.0 at `game/.tools/gbdk`; override it with `make -C game GBDK=/absolute/path/to/gbdk`. It also runs the ROM header check. `make test` runs `game/tests/playthrough.py`; the local requirements pin PyBoy 2.6.1, and the shared toolchain's PyBoy 2.7.0 also passes the checks.
 
-`make -C game release` runs the tests and creates `game/dist/cipherspace-chapter1-v0.1.0.zip` and its unpacked folder, including controls, flashing instructions, checksums, test evidence, and an emulator preview. Packaging checks that the ROM is the exact file that passed the playthrough. Final releases in `game/dist` can be committed; build output, toolchains, virtual environments, and generated previews are ignored.
+`make -C game release` runs the tests and creates `game/dist/cipherspace-chapter1-v0.2.0.zip` and its unpacked folder, including controls, flashing instructions, checksums, test evidence, and an emulator preview. Packaging checks that the ROM is the exact file that passed the playthrough. The v0.1.0 release is retained. Final releases in `game/dist` can be committed; build output, toolchains, virtual environments, and generated previews are ignored.
+
+To build and test separately while a live preview uses the default ROM, choose another output directory:
+
+```sh
+make -C game BUILD_DIR=build/ux-review test
+make -C game BUILD_DIR=build/ux-review release
+```
+
+The ROM, objects, report, and screenshots all use that directory. Packaging receives it through `CIPHERSPACE_BUILD_DIR`. Avoid rebuilding the default ROM during an active live preview.
 
 For a fresh checkout, download the appropriate macOS archive from the [official GBDK 4.5.0 release](https://github.com/gbdk-2020/gbdk-2020/releases/tag/4.5.0), verify its published checksum, and extract its `gbdk` directory into `game/.tools`. Create the Python environment and install the pinned test dependencies:
 
@@ -56,9 +69,24 @@ python3 -m venv game/.venv
 game/.venv/bin/python -m pip install -r game/requirements-test.txt
 ```
 
+### Use the shared Chromatic tools
+
+After the ModRetro Chromatic plugin has prepared its build and emulator dependencies, pass their paths to Make. For the default macOS setup root:
+
+```sh
+cipherspace_tools="$HOME/Library/Application Support/modretro-chromatic/toolchain/.local"
+make -C game -B test \
+  GBDK="$cipherspace_tools/gbdk" \
+  PYTHON="$cipherspace_tools/pyboy-venv/bin/python"
+```
+
+Use the paths reported by the plugin's toolchain doctor if your setup root differs. `-B` rebuilds every object with the selected compiler before running the tests. The report records the PyBoy version actually used. The project-local defaults remain available when these overrides are omitted; keep the project's pinned requirements in its local environment so they do not downgrade the shared emulator.
+
 Emulator tests check the ROM's behavior. Cartridge boot, physical controls, speaker output, and saves surviving power-off still require a hardware check.
 
 Test evidence is written to `game/build/playthrough-report.json`, with actual emulator frames in `game/build/screenshots`. The report includes the tested ROM's SHA-256 digest.
+
+Version 0.2.0 passed 141 checks. Its frame audit observed 4,298 consecutive gameplay frames with no blank screen or LCD-off frame. The checks cover wrong-answer feedback, undo, countdown timing, saved progress, interrupted-countdown recovery, and older save migration. The existing version 2 save format is unchanged.
 
 Generated graphics are included, so rebuilding the ROM does not need Node.js. To regenerate graphics, use Node.js with `sharp` installed (or set `SHARP_PATH` to the module directory):
 
@@ -80,7 +108,7 @@ npm install --global @modretro/chromatic-cli@1.2.1
 
 The npm launcher requires Node.js 18 or newer. macOS needs no additional USB drivers. The helper looks for the executable in `CHROMATIC_CLI`, then `game/.tools/chromatic-cli`, then `PATH`. Set `CHROMATIC_CLI` to one executable path, without extra arguments.
 
-1. If developer mode is not configured yet, follow the [official DevDay setup guide](https://support.modretro.com/en_us/chromatic-devday-edition-quickstart-guid-By1iOlcMg) to update the console and activate it with the included code. MR Updater opens the activation dialog with **Cmd-I** on macOS; the CLI also provides `chromatic-cli activate <CODE>`.
+1. If developer mode is not configured yet, follow the [official DevDay setup guide](https://support.modretro.com/en_us/chromatic-devday-edition-quickstart-guid-By1iOlcMg) and complete activation yourself in the official MR Updater. Keep activation codes out of source files, terminal history, and chat.
 2. Insert the DevDay cartridge, turn on the console, and connect it with a USB data cable. Connect exactly one Chromatic.
 3. Run the helper and review the detected cartridge before accepting the official CLI's write confirmation:
 

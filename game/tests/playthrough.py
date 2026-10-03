@@ -7,21 +7,26 @@ import binascii
 import hashlib
 import io
 import json
+import os
 import re
+from importlib.metadata import version
 from pathlib import Path
 
 from PIL import Image, ImageDraw
 from pyboy import PyBoy
 
 ROOT = Path(__file__).resolve().parents[1]
-ROM = ROOT / 'build/cipherspace.gbc'
+ROM = Path(os.environ.get('CIPHERSPACE_ROM', ROOT / 'build/cipherspace.gbc')).resolve()
+OUTPUT = Path(os.environ.get('CIPHERSPACE_TEST_OUTPUT', ROOT / 'build')).resolve()
 GAME_SIZE = 37
 NAME_SETUP = 12
-SHOTS = ROOT / 'build/screenshots'
-SHOTS.mkdir(exist_ok=True)
+SHOTS = OUTPUT / 'screenshots'
+SHOTS.mkdir(parents=True, exist_ok=True)
 SYMS = {name: int(value, 16) for name, value in re.findall(
     r'^DEF (\w+) (0x[0-9A-Fa-f]+)$', ROM.with_suffix('.noi').read_text(), re.M)}
 checks = []
+frame_audit = {'frames_observed': 0, 'lcd_disabled_frames': 0,
+               'uniform_frames': 0, 'actions': {}}
 
 
 def check(condition, description):
@@ -35,6 +40,43 @@ class Session:
                        ram_file=io.BytesIO(ram or bytes(8192)), sound_volume=0)
         self.p.set_emulation_speed(0)
         self.p.tick(180)
+        self.frames = 180
+        self.action = 'idle'
+        self.recent_actions = []
+
+    def tick(self, frames):
+        """Inspect every rendered frame, including frames inside screen changes.
+
+        A screenshot after an input can miss the one-frame white flash reported
+        on hardware. Begin after the boot ROM, then never skip an emulated frame.
+        """
+        for _ in range(frames):
+            self.p.tick(1, render=True)
+            self.frames += 1
+            frame_audit['frames_observed'] += 1
+            actions = frame_audit['actions']
+            actions[self.action] = actions.get(self.action, 0) + 1
+            lcd_on = bool(self.p.memory[0xff40] & 0x80)
+            extrema = self.p.screen.image.convert('RGB').getextrema()
+            uniform = all(low == high for low, high in extrema)
+            frame_audit['lcd_disabled_frames'] += int(not lcd_on)
+            frame_audit['uniform_frames'] += int(uniform)
+            if not lcd_on or uniform:
+                self.p.screen.image.save(SHOTS / 'first-blank-frame.png')
+                (OUTPUT / 'first-blank-frame.json').write_text(json.dumps({
+                    'rom_sha256': hashlib.sha256(ROM.read_bytes()).hexdigest(),
+                    'frame': self.frames, 'lcd_on': lcd_on,
+                    'rgb_extrema': extrema, 'state': list(self.state()),
+                    'action': self.action, 'recent_actions': self.recent_actions,
+                }, indent=2) + '\n')
+                raise AssertionError(f'Blank/display-off frame {self.frames} '
+                                     f'during {self.action}; evidence saved in {SHOTS}')
+
+    def record_action(self, action):
+        self.action = action
+        self.recent_actions.append({'frame': self.frames, 'action': action,
+                                    'scene': self.state()[0]})
+        self.recent_actions = self.recent_actions[-32:]
 
     def state(self):
         addr = SYMS['_game']
@@ -50,7 +92,7 @@ class Session:
         rows = []
         for row in range(18):
             rows.append(''.join(chr((tiles[i] % 64) + 32)
-                                if attrs[i] == 15 and tiles[i] < 128 else ' '
+                                if attrs[i] & 0x08 and tiles[i] < 128 else ' '
                                 for i in range(row * 20, (row + 1) * 20)))
         return text in '\n'.join(rows)
 
@@ -61,16 +103,18 @@ class Session:
         check(self.state()[0] == expected, f'scene {expected} reached')
 
     def press(self, key):
+        self.record_action(f'press {key}')
         self.p.button_press(key)
-        self.p.tick(6)
+        self.tick(6)
         self.p.button_release(key)
-        self.p.tick(6)
+        self.tick(6)
 
     def hold(self, key, frames):
+        self.record_action(f'hold {key}')
         self.p.button_press(key)
-        self.p.tick(frames)
+        self.tick(frames)
         self.p.button_release(key)
-        self.p.tick(6)
+        self.tick(6)
 
     def choose(self, index):
         for _ in range(5):
@@ -106,19 +150,62 @@ class Session:
         check(self.value('ui_mode') == 5, 'new trip requires deliberate confirmation')
         self.p.button_press('a')
         self.p.button_press('b')
+        self.record_action('hold a+b to reset')
         if test_short_hold:
-            self.p.tick(60)
+            self.tick(60)
             check(self.value('ui_mode') == 5, 'short A+B hold does not erase the trip')
-            self.p.tick(75)
+            self.tick(75)
         else:
-            self.p.tick(135)
+            self.tick(135)
         self.p.button_release('a')
         self.p.button_release('b')
-        self.p.tick(6)
+        self.tick(6)
         self.scene(NAME_SETUP)
 
     def shot(self, name):
         self.p.screen.image.save(SHOTS / (name + '.png'))
+
+    def launch(self):
+        """Repeated A presses must still show the whole launch countdown."""
+        self.scene(6)
+        check(self.state()[1] >= 2, 'Lift off opens a dedicated countdown screen')
+        observed, durations, pictures = [], {}, {}
+        self.record_action('press a repeatedly during countdown')
+        for elapsed in range(600):
+            if self.state()[0] != 6:
+                break
+            count = self.value('launch_count')
+            if not observed or observed[-1] != count:
+                observed.append(count)
+            durations[count] = durations.get(count, 0) + 1
+            if durations[count] == 20:
+                label = str(count) if count else 'go'
+                self.shot('10-countdown-' + label)
+                pictures[count] = self.p.screen.image.crop((40, 24, 120, 112)).tobytes()
+            # Fresh presses, not just a held button, test accidental skipping.
+            if elapsed % 12 == 0:
+                self.p.button_press('a')
+            elif elapsed % 12 == 6:
+                self.p.button_release('a')
+            self.tick(1)
+        self.p.button_release('a')
+        self.tick(6)
+        check(observed == [3, 2, 1, 0], 'launch shows 3, 2, 1, then GO in order')
+        check(all(durations.get(count, 0) >= 40 for count in (3, 2, 1, 0)),
+              'repeated A presses cannot skip any countdown step')
+        check(len(pictures) == 4 and len(set(pictures.values())) == 4,
+              'each countdown step visibly changes the center of the screen')
+        self.scene(7)
+        # The scene changes before its staged artwork reaches the screen.
+        # Observe the visible transition before testing steering or taking a shot.
+        for _ in range(60):
+            if (self.shows('STEER TO THE MOON.')
+                    and self.p.screen.image.crop((40, 24, 120, 112)).tobytes() != pictures[0]):
+                break
+            self.tick(1)
+        check(self.shows('STEER TO THE MOON.')
+              and self.p.screen.image.crop((40, 24, 120, 112)).tobytes() != pictures[0],
+              'the visible flight scene replaces GO before steering begins')
 
     def power_off(self):
         ram = io.BytesIO()
@@ -167,6 +254,7 @@ check(s.value('name_choice') == 0, 'name-grid Down wraps to the first row')
 s.press('start')
 check(s.state()[0] == NAME_SETUP and s.value('name_error'),
       'Start rejects an empty name without beginning the trip')
+check(s.shows('ADD A LETTER FIRST'), 'empty-name feedback says how to continue')
 s.name_pick(27)
 check(s.state()[0] == NAME_SETUP and s.value('name_error'),
       'DONE also rejects an empty name')
@@ -187,6 +275,9 @@ s.shot('02-backyard')
 s.press('a')
 s.press('a')
 s.scene(2)
+check(s.shows('YOUR KEY') and s.shows('SECRET NOTE') and s.shows('YOUR WORD')
+      and s.shows('LEFT/RIGHT: PICK'),
+      'the cipher guide, secret note, answer, and choices have separate labels')
 s.shot('03-open-code')
 
 # Free help can be opened and closed without changing a puzzle.
@@ -213,6 +304,10 @@ check(s.value('ui_mode') == 0 and s.state() == before,
 # Incorrect choices remain editable, and B restores the previous answer.
 s.press('a')  # E in the circle slot; deliberately wrong.
 check(s.state()[4] == 2, 'wrong choice remains editable')
+check(s.value('wrong') and s.value('slot') == 0,
+      'a wrong letter shows feedback immediately and keeps its position selected')
+check(s.shows("THAT DOESN'T MATCH"), 'an incorrect answer has explicit text feedback')
+s.shot('05-wrong-answer')
 s.press('b')
 check(s.state()[4] == 255, 'undo clears a first attempt')
 s.choose(2)  # O
@@ -232,6 +327,7 @@ s.choose(3)  # P
 s.choose(0)  # E
 s.choose(0)  # Incorrect E where N belongs
 check(s.value('wrong') and not s.state()[3], 'incorrect complete word does not unlock ship')
+s.shot('06-word-error')
 s.press('b')
 check(not s.value('wrong') and s.state()[7] == 255, 'undo restores last blank after incorrect word')
 s.choose(1)  # N
@@ -239,10 +335,10 @@ check(s.state()[3] == 1, 'OPEN unlocks the hatch')
 s.shot('06-open-solved')
 s.press('a')
 s.scene(3)
-damaged = s.p.screen.image.crop((0, 8, 160, 96)).tobytes()
+damaged = s.p.screen.image.crop((0, 8, 160, 72)).tobytes()
 s.press('a')
 check(s.state()[2] == 1, 'crystal repairs the ship')
-check(s.p.screen.image.crop((0, 8, 160, 96)).tobytes() != damaged,
+check(s.p.screen.image.crop((0, 8, 160, 72)).tobytes() != damaged,
       'repair visibly changes the ship artwork')
 s.shot('07-ship-restored')
 s.press('a')
@@ -261,13 +357,23 @@ s.press('a')
 s.scene(6)
 s.press('a')
 s.press('a')
+check(s.state()[0] == 6 and s.state()[1] >= 2,
+      'Lift off starts the countdown before flight')
+launch_save = s.power_off()
+s = Session(launch_save)
+s.press('a')
+s.scene(6)
+check(s.state()[1] == 1,
+      'a restart during countdown returns safely to the launch prompt')
+s.press('a')
+s.launch()
 s.scene(7)
 s.shot('10-flight')
 x, y = s.state()[25:27]
 s.hold('right', 32)
 check(s.state()[25] > x and s.state()[26] == y, 'held Right moves only horizontally')
 stopped = s.state()[25:27]
-s.p.tick(60)
+s.tick(60)
 check(s.state()[25:27] == stopped, 'ship stops when the button is released')
 s.hold('left', 180)
 check(s.state()[25] == 8, 'left flight boundary holds')
@@ -373,6 +479,7 @@ check(s.value('name_length') == 8, 'eight uppercase letters fit in a player name
 s.name_pick(25)  # A ninth letter, Z, must not overwrite the eighth or its NUL.
 check(s.value('name_length') == 8 and s.value('name_error'),
       'a ninth name character is rejected visibly')
+check(s.shows('FULL! PRESS START.'), 'full-name feedback gives the next button to press')
 s.press('start')
 s.scene(1)
 check(s.state()[28:37] == b'STARLITE\0',
@@ -473,9 +580,26 @@ for i, name in enumerate(names):
     sheet.paste(shot.resize((320, 288), Image.Resampling.NEAREST), (x, y))
     draw.text((x, y - 18), name[3:].replace('-', ' ').upper(), fill='#e8ebd4')
 sheet.save(SHOTS / 'chapter1-contact-sheet.png')
+ux_names = ['02-name-setup', '02-backyard', '03-open-code',
+            '05-wrong-answer', '06-word-error', '06-open-solved',
+            '04-word-help', '10-countdown-3', '10-countdown-2',
+            '10-countdown-1', '10-countdown-go', '10-flight']
+ux_sheet = Image.new('RGB', (3 * 336, 4 * 324), '#0a1724')
+draw = ImageDraw.Draw(ux_sheet)
+for i, name in enumerate(ux_names):
+    x, y = (i % 3) * 336 + 8, (i // 3) * 324 + 24
+    shot = Image.open(SHOTS / (name + '.png')).convert('RGB')
+    ux_sheet.paste(shot.resize((320, 288), Image.Resampling.NEAREST), (x, y))
+    draw.text((x, y - 18), name[3:].replace('-', ' ').upper(), fill='#e8ebd4')
+ux_sheet.save(SHOTS / 'ux-contact-sheet.png')
+check(frame_audit['lcd_disabled_frames'] == 0,
+      'LCD stays enabled on every observed frame after boot')
+check(frame_audit['uniform_frames'] == 0,
+      'no blank framebuffer appears during inputs, menus, or scene transitions')
 report = {'rom_sha256': hashlib.sha256(ROM.read_bytes()).hexdigest(),
-          'emulator': 'PyBoy 2.6.1', 'checks_passed': len(checks),
-          'checks': checks, 'hardware_tested': False}
-(ROOT / 'build/playthrough-report.json').write_text(json.dumps(report, indent=2) + '\n')
+          'emulator': f'PyBoy {version("pyboy")}', 'checks_passed': len(checks),
+          'checks': checks, 'frame_audit': frame_audit, 'hardware_tested': False}
+(OUTPUT / 'playthrough-report.json').write_text(json.dumps(report, indent=2) + '\n')
 print(f'PASS: {len(checks)} checks; player names, full route, optional route, '
-      'save recovery, migration, input and screenshots.')
+      'save recovery, migration, input, countdown and screenshots. '
+      f'{frame_audit["frames_observed"]} consecutive frames checked for blanking.')
