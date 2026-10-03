@@ -1,0 +1,53 @@
+{
+  "tool": "Built-in image generation",
+  "note": "These briefs summarize the final image-generation prompts. Native assets add editable plaques, positioning, and deterministic RGB555 palette conversion.",
+  "commonPrompt": "Create an exact 2×2 atlas with equal quadrants and no gutters, borders, text, letters, or numbers. Use a rich pixel-adventure style with deliberate clusters and compositions readable at 160×96. Keep the rounded pearl-silver spacecraft, dark teal canopy, jade fins, brass details, twin engine pods, and small antenna consistent. The girl has a dark brown bob, a confident expression, and a cream-and-teal spacesuit with amber accents. The mood is gentle and adventurous.",
+  "atlases": [
+    {
+      "file": "hero-repair-cockpit.png",
+      "references": [
+        "../opening-scenes-v2.png"
+      ],
+      "brief": "A confident girl portrait with a blank chest badge; an open hatch with the girl beside the ship; a gloved hand holding a mint crystal beside an empty socket; and the same girl seated in the cockpit, reaching for a physical button."
+    },
+    {
+      "file": "hatch-repair.png",
+      "references": [
+        "hero-repair-cockpit.png"
+      ],
+      "brief": "Matching mechanical views: a closed hatch, a partly open hatch, an empty gloved hand beside the crystal socket, and the crystal inserted into that socket. Leave room for the game to animate the loose crystal."
+    },
+    {
+      "file": "accident-launch.png",
+      "references": [
+        "../opening-scenes-v2.png",
+        "hero-repair-cockpit.png"
+      ],
+      "brief": "An earlier Moon accident with the alien safe in an escape pod and the ship’s seat visibly empty. The other panels show the girl’s later launch from the backyard, above the house, and through the clouds.",
+      "correction": "Remove the human girl from the earlier Moon accident. Show an empty pilot seat and the alien safely outside in an escape pod. Preserve the girl in the three later launch panels."
+    },
+    {
+      "file": "space-moon-alien.png",
+      "references": [
+        "../opening-scenes-v2.png",
+        "accident-launch.png"
+      ],
+      "brief": "A powered ascent away from Earth; a cratered Moon with a landing target near its south pole; a walkable lunar surface with a parked ship and beacon; and a cute teal alien waiting beside the beacon. Leave moving actors out of the navigation backgrounds."
+    },
+    {
+      "file": "meeting.png",
+      "references": [
+        "hero-repair-cockpit.png",
+        "space-moon-alien.png"
+      ],
+      "brief": "The same girl and alien meet on the Moon. The girl waves while the alien looks puzzled; they examine a blank shared-code card; they shake hands; and they pose together as friends. Keep writing and speech bubbles out of the source artwork."
+    }
+  ],
+  "nativeOverlays": {
+    "pilotBadge": "x46,y64,w68,h18; renderer name x48,y72,w64,h8",
+    "notes": "x24,y24,w112,h48; renderer places exact cipher symbols at tile(4,5), (7,5), (10,5), (13,5)",
+    "sharedCode": "x32,y64,w96,h28; renderer places HI at tile(9,8), H= and I= labels at (5,9) and (10,9), and symbols at (7,9) and (12,9)"
+  },
+  "nativeActors": "actors.json contains two original 16×24 sprites, one girl and one alien. Each uses six tiles, three opaque colors, and index 0 for transparency.",
+  "conversion": "game/tools/make-cinema.cjs produces 24 frames at 160×96, with 240 tiles and seven palettes of four RGB555 colors per frame. Palette 7 is reserved for the interface."
+}

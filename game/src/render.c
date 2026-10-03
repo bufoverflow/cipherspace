@@ -1,8 +1,9 @@
 #pragma bank 1
 #include "game.h"
+#include "cinema.h"
 
 uint8_t bgtiles[360], bgattrs[360];
-/* Each area has both a label and a distinct color; color is never the only cue. */
+/* Shape, position and button badges carry meaning alongside the colors. */
 enum { UI_KEY=8, UI_FOCUS, UI_ANSWER, UI_ERROR, UI_GOOD, UI_BORDER, UI_NEUTRAL, UI_STANDARD };
 const uint16_t ui_screen_palettes[32] = {
     RGB(2,8,9), RGB(6,15,14), RGB(11,24,20), RGB(19,31,25),
@@ -53,17 +54,37 @@ static void rule(uint8_t y) {uint8_t x;for(x=0;x<20;x++)tile(x,y,139);}
 
 static void label(const char *s) {ink=UI_STANDARD;print(1,0,s,0);}
 
+static void badge(uint8_t x,uint8_t y,const char *key,const char *action) {
+    uint8_t c,prior=ink;ink=UI_STANDARD;
+    tile(x++,y,64);
+    while(*key&&x<20){c=*key++;tile(x++,y,c>=32&&c<96?c-32+64:64);}
+    tile(x++,y,64);print(x+1,y,action,0);ink=prior;
+}
+
+static void action(uint8_t y,const char *key,const char *text) {
+    uint8_t n=(uint8_t)(strlen(key)+strlen(text)+3);
+    badge(n<20?(20-n)/2:0,y,key,text);
+}
+
+static void footer(uint8_t y,const char *text) {
+    /* World captions pass only familiar button names followed by an action. */
+    if(!strncmp(text,"A ",2))action(y,"A",text+2);
+    else if(!strncmp(text,"B ",2))action(y,"B",text+2);
+    else if(!strncmp(text,"SELECT: ",8))action(y,"SELECT",text+8);
+    else if(!strncmp(text,"START: ",7))action(y,"START",text+7);
+    else center(y,text);
+}
+
 static void say(const char *a,const char *b,const char *foot) {
-    /* Two short lines with a full blank row between them, inside a story callout. */
-    ink=UI_STANDARD;tile(3,9,'/'-32);tile(4,9,'\\'-32);
-    panel(0,10,20,6,UI_STANDARD);center(11,a);center(13,b);
-    fill(0,16,20,2,UI_STANDARD);print(1,17,foot,0);
+    /* Keep the cabin and its empty seat visible above a compact caption. */
+    ink=UI_STANDARD;panel(0,12,20,5,UI_STANDARD);center(13,a);center(15,b);
+    fill(0,17,20,1,UI_STANDARD);footer(17,foot);
 }
 
 static void flight_note(const char *a,const char *b,const char *foot) {
     /* Keep all 96 sky pixels available to the rocket, including older saves. */
     ink=UI_STANDARD;panel(0,12,20,5,UI_STANDARD);
-    center(13,a);center(15,b);fill(0,17,20,1,UI_STANDARD);print(1,17,foot,0);
+    center(13,a);center(15,b);fill(0,17,20,1,UI_STANDARD);footer(17,foot);
 }
 
 static void big(uint8_t x,uint8_t y,uint8_t base,uint8_t symbol,uint8_t letter,uint8_t selected) {
@@ -79,43 +100,63 @@ static void pair(uint8_t x,uint8_t y,uint8_t symbol) {
     tile(x,y,128+symbol);print(x+1,y,"=",0);print(x+2,y,l,0);
 }
 
+static void ticker(const char *text) {
+    uint8_t x,n=(uint8_t)strlen(text),index;
+    if(n<=20){center(0,text);return;}
+    for(x=0;x<20;x++){
+        index=(ticker_offset+x)%(n+4);
+        tile(x,0,index<n?text[index]-32:0);
+    }
+}
+
+static void connector(uint8_t x,uint8_t y) {
+    static uint8_t loaded;
+    static const uint8_t arrow_tiles[32]={
+        1,1, 1,1, 1,1, 1,1, 15,15, 7,7, 3,3, 0,0,
+        128,128, 128,128, 128,128, 128,128, 240,240, 224,224, 192,192, 0,0
+    };
+    /* IDs192–207 lie between the two buffered sets of enlarged glyphs. */
+    if(!loaded){VBK_REG=1;set_bkg_data(192,2,arrow_tiles);VBK_REG=0;loaded=1;}
+    tile(x,y,192);tile(x+1,y,193);
+}
+
 static void puzzle(void) {
-    uint8_t p=puzzle_id(),i,x,l,a,done=game.solved&(1u<<p);
-    static const char *const titles[3]={"OPEN THE HATCH","FIND OUR FRIEND","SAY HELLO"};
-    colored_screen=1;ink=UI_STANDARD;center(0,titles[p]);
-    panel(0,1,20,4,UI_KEY);ink=UI_KEY;print(6,1," YOUR KEY ",0);
+    uint8_t p=puzzle_id(),i,x,l,a,active,done=game.solved&(1u<<p);
+    static const char *const titles[3]={"MATCH THE SHAPES TO OPEN THE DOOR","MATCH THE SHAPES TO FIND HER","SEND A HELLO WITH SHAPES"};
+    colored_screen=1;ink=UI_STANDARD;ticker(titles[p]);
+    if(wrong){ink=UI_ERROR;tile(0,1,143);print(2,1,"THAT DOESN'T MATCH",0);}
+    panel(0,2,20,3,UI_KEY);ink=UI_KEY;
     if(p==0){for(i=0;i<4;i++)pair(2+i*4,3,i);}
     else if(p==1){pair(4,3,CIRCLE);pair(8,3,STAR);pair(12,3,DIAMOND);}
     else{pair(6,3,PLUS);pair(10,3,HEART);}
-    ink=UI_STANDARD;center(5,p==2?"SEND THIS WORD":"SECRET NOTE");
     for(i=0;i<lengths[p];i++) {
         x=(20-lengths[p]*4)/2+i*4;l=words[p][i];a=game.answers[p][l];
-        ink=UI_STANDARD;big(x,6,144+i*4,p==2?letters[l]:l,p==2,0);
-        ink=done?UI_GOOD:(i==slot?(wrong?UI_ERROR:UI_ANSWER):UI_NEUTRAL);
-        big(x,9,160+i*4,a==255?'?':(p==2?a:letters[a]),a==255||p!=2,0);
-        if(i==slot&&!done&&!wrong)print(x,11,"^^",0);
+        active=i==slot;
+        if(done||active)panel(x,5,4,7,done?UI_GOOD:UI_ANSWER);
+        ink=done?UI_GOOD:active?UI_ANSWER:UI_NEUTRAL;
+        big(x+1,6,144+i*4,p==2?letters[l]:l,p==2,0);
+        if(active&&!done)connector(x+1,8);
+        ink=done?UI_GOOD:active?(wrong?UI_ERROR:UI_ANSWER):UI_NEUTRAL;
+        big(x+1,9,160+i*4,a==255?'?':(p==2?a:letters[a]),a==255||p!=2,0);
     }
-    ink=UI_ANSWER;center(8,p==2?"YOUR MESSAGE":"YOUR WORD");
     if(done) {
-        panel(0,12,20,4,UI_GOOD);ink=UI_GOOD;
-        center(13,p==0?"YOU OPENED IT!":p==1?"SHE IS ON THE MOON":"YOUR HELLO ARRIVED");
-        center(14,p==0?"LET'S PEEK INSIDE.":p==1?"LET'S GO FIND HER!":"SOMEONE IS WAITING");
-        ink=UI_STANDARD;center(17,"A CONTINUE");
+        /* The completed word gets a short quiet beat before the scene moves. */
+        ink=UI_GOOD;center(14,"!");
     } else {
-        if(wrong){fill(0,11,20,1,UI_ERROR);ink=UI_ERROR;tile(0,11,143);print(2,11,"THAT DOESN'T MATCH",0);}
-        ink=UI_NEUTRAL;center(12,"LEFT/RIGHT: PICK");ink=UI_STANDARD;
         for(i=0;i<option_counts[p];i++){
             x=(20-option_counts[p]*4)/2+i*4;l=options[p][i];
-            big(x,13,176+i*4,p==2?l:letters[l],p!=2,i==choice);
+            if(i==choice)panel(x,12,4,4,UI_FOCUS);
+            ink=i==choice?UI_FOCUS:UI_STANDARD;
+            big(x+1,13,176+i*4,p==2?l:letters[l],p!=2,0);
         }
-        ink=UI_STANDARD;center(16,p==2&&!can_undo()?"A USE    B LATER":"A USE     B UNDO");
-        center(17,"SELECT: HELP");
+        ink=UI_STANDARD;badge(1,16,"A","USE");badge(10,16,"B","UNDO");
+        action(17,"SELECT","HELP");
     }
 }
 
 static void words_page(void) {
     uint8_t i;
-    static const char *const names[5]={"KEY","PILOT","BEACON","CRATER","ANTENNA"};
+    static const char *const names[6]={"KEY","PILOT","BEACON","CRATER","ANTENNA","SOUTH POLE"};
     center(0,"WORD EXPLORER");panel(0,2,20,12,UI_NEUTRAL);ink=UI_NEUTRAL;center(3,names[word_index]);
     switch(word_index) {
         case 0:
@@ -126,8 +167,12 @@ static void words_page(void) {
         case 2:center(5,"IT SAYS:");center(7,"HERE I AM!");center(10,"IT HELPS US FIND");center(12,"A PLACE.");break;
         case 3:center(5,"A ROUND DIP IN");center(7,"THE GROUND IS");center(9,"A CRATER.");center(12,"THE MOON HAS LOTS!");break;
         case 4:center(5,"THIS PART HELPS US");center(7,"SEND AND GET");center(9,"MESSAGES.");break;
+        case 5:
+            center(5,"THE MOON'S");center(7,"SOUTH END.");
+            ink=UI_NEUTRAL;big(9,9,144,CIRCLE,0,0);
+            ink=UI_KEY|64;connector(9,11);break;
     }
-    ink=UI_STANDARD;center(15,"LEFT/RIGHT: WORD");center(17,"B BACK");
+    ink=UI_STANDARD;center(15,"<   WORDS   >");action(17,"B","BACK");
 }
 
 static void help_page(void) {
@@ -135,7 +180,7 @@ static void help_page(void) {
     center(0,"LET'S TRY TOGETHER");panel(0,2,20,12,UI_NEUTRAL);ink=UI_NEUTRAL;
     if(p!=255) {
         l=words[p][0];
-        if(hint_step==0){center(4,"LOOK AT YOUR KEY.");center(6,p==2?"FIND THE LETTER.":"FIND ITS SHAPE.");center(9,"PICK ITS PARTNER.");center(11,"PRESS A TO USE IT.");}
+        if(hint_step==0){center(4,"LOOK AT YOUR KEY.");center(6,p==2?"FIND THE LETTER.":"FIND ITS SHAPE.");center(9,"PICK ITS PARTNER.");action(11,"A","USE IT");}
         else if(hint_step==1){center(4,"ONE SHAPE MEANS");center(6,"ONE LETTER.");center(9,"UP/DOWN PICKS");center(11,"A BOX TO CHANGE.");}
         else{
             center(4,"HERE IS ONE PAIR.");ink=UI_KEY;
@@ -143,8 +188,10 @@ static void help_page(void) {
             ink=UI_NEUTRAL;center(11,"TRY THE NEXT ONE!");
         }
     }else if(game.scene==FLIGHT){center(5,"FLY TO THE ROUND");center(7,"MOON AT THE TOP.");center(10,"LET GO TO STOP.");}
-    else{center(5,"LOOK FOR A GLOW.");center(8,"PRESS A TO LOOK.");}
-    ink=UI_STANDARD;center(15,hint_step<2?"A MORE HELP":"A TRY IT");center(17,"B BACK");
+    else if(game.scene==MOON_APPROACH){center(4,"FLY TO THE GLOW.");center(6,"AT THE SOUTH POLE.");center(9,"ARROWS STEER.");action(11,"A","LAND");}
+    else if(game.scene==MOON_WALK){center(4,"WALK TO THE GLOW.");center(6,"LEFT AND RIGHT");center(8,"MOVE YOUR FEET.");action(11,"A","MEET");}
+    else{center(5,"LOOK FOR A GLOW.");action(8,"A","LOOK");}
+    ink=UI_STANDARD;action(15,"A",hint_step<2?"MORE HELP":"TRY IT");action(17,"B","BACK");
 }
 
 static void menus(void) {
@@ -154,31 +201,31 @@ static void menus(void) {
     if(ui_mode==HELP_MENU){
         center(0,"YOUR HELPER");panel(0,2,20,12,UI_NEUTRAL);ink=UI_NEUTRAL;
         print(4,4,"WORD HELP",selection==0);print(4,7,"PUZZLE HELP",selection==1);print(4,10,"BACK",selection==2);
-        print(2,4+selection*3,">",0);ink=UI_STANDARD;center(15,"UP/DOWN THEN A");center(17,"ASK ANY TIME!");
+        print(2,4+selection*3,">",0);ink=UI_STANDARD;action(15,"A","CHOOSE");center(17,"ASK ANY TIME!");
     }else if(ui_mode==PAUSE_MENU){
         center(1,"TAKE A BREAK");strcpy(caption,"PILOT: ");strcat(caption,game.name);center(3,caption);
-        panel(0,5,20,10,UI_NEUTRAL);ink=UI_NEUTRAL;center(6,"A KEEP PLAYING");center(9,game.sound?"B SOUND: ON":"B SOUND: OFF");center(12,"SELECT: TITLE");
+        panel(0,5,20,10,UI_NEUTRAL);ink=UI_NEUTRAL;action(6,"A","KEEP PLAYING");action(9,"B",game.sound?"SOUND: ON":"SOUND: OFF");action(12,"SELECT","TITLE");
         ink=UI_STANDARD;center(17,"YOUR TRIP IS SAVED.");
     }else if(ui_mode==RESET_CONFIRM){
         center(1,"START A NEW TRIP?");panel(0,3,20,11,UI_NEUTRAL);ink=UI_NEUTRAL;
-        center(5,"THIS STARTS OVER.");center(8,"HOLD A+B TO RESET");center(10,"FOR TWO SECONDS.");ink=UI_STANDARD;center(17,"B BACK");
+        center(5,"THIS STARTS OVER.");action(8,"A+B","HOLD TO RESET");center(10,"FOR TWO SECONDS.");ink=UI_STANDARD;action(17,"B","BACK");
     }
 }
 
 static void name_setup(void) {
     uint8_t i,x,y;
     char letter[2];letter[1]=0;colored_screen=1;ink=UI_STANDARD;
-    center(0,"YOUR PILOT NAME");
-    ink=UI_ANSWER;for(i=0;i<8;i++)big(2+i*2,2,144+i*4,i<name_length?game.name[i]:'_',1,i==name_length);
-    ink=name_error?UI_ERROR:UI_NEUTRAL;
-    center(5,name_error==1?"ADD A LETTER FIRST":name_error==2?"FULL! PRESS START.":"PICK A LETTER");
-    if(name_error)tile(0,5,143);
-    for(i=0;i<28;i++){
+    center(0,"YOUR NAME");
+    panel(0,2,20,4,UI_ANSWER);
+    ink=UI_ANSWER;for(i=0;i<8;i++)big(2+i*2,3,144+i*4,i<name_length?game.name[i]:'_',1,0);
+    if(name_error){ink=UI_ERROR;center(1,name_error==1?"ADD A LETTER FIRST":"FULL! PRESS START.");}
+    for(i=0;i<26;i++){
         x=2+(i%7)*2;y=7+(i/7)*2;ink=UI_STANDARD;
-        if(i<26){letter[0]='A'+i;print(x,y,letter,i==name_choice);}
-        else print(x,y,i==26?"<":"DONE",i==name_choice);
+        letter[0]='A'+i;print(x,y,letter,0);
     }
-    ink=UI_STANDARD;center(15,name_choice==26?"A ERASE   B ERASE":name_choice==27?"A DONE    B ERASE":"A ADD     B ERASE");center(17,"START: ALL DONE!");
+    x=2+(name_choice%7)*2;y=7+(name_choice/7)*2;
+    panel(x-1,y-1,3,3,UI_FOCUS);ink=UI_FOCUS;letter[0]='A'+name_choice;print(x,y,letter,0);
+    ink=UI_STANDARD;badge(1,16,"A","ADD");badge(10,16,"B","ERASE");action(17,"START","DONE");
 }
 
 static void large_letter(uint8_t x,uint8_t y,uint8_t c) {
@@ -193,9 +240,192 @@ static void countdown(void) {
     colored_screen=1;ink=UI_STANDARD;center(1,"READY FOR LIFTOFF!");
     ink=UI_KEY;tile(2,4,131);tile(17,5,131);tile(3,12,131);tile(16,12,131);
     ink=UI_KEY;
-    if(launch_count){large_letter(7,5,'0'+launch_count);}
+    if(launch_count==10){large_letter(4,5,'1');large_letter(10,5,'0');}
+    else if(launch_count){large_letter(7,5,'0'+launch_count);}
     else{large_letter(4,5,'G');large_letter(10,5,'O');}
     ink=UI_STANDARD;center(15,launch_count?"HERE WE GO...":"TO THE MOON!");
+}
+
+static void note_symbols(uint8_t p) {
+    uint8_t i;ink=UI_STANDARD;
+    for(i=0;i<lengths[p];i++)big(4+i*3,5,144+i*4,words[p][i],0,0);
+}
+
+static void cinema_effects(void) {
+    static uint8_t loaded;
+    static const uint8_t effects[224]={
+        0,0,1,0,1,0,6,0,6,0,24,0,24,0,96,0,
+        0,0,128,0,128,0,96,0,96,0,24,0,24,0,6,0,
+        96,0,24,0,24,0,6,0,6,0,1,0,1,0,0,0,
+        6,0,24,0,24,0,96,0,96,0,128,0,128,0,0,0,
+        7,0,24,0,32,0,64,0,64,0,128,0,128,0,128,0,
+        224,0,24,0,4,0,2,0,2,0,1,0,1,0,1,0,
+        128,0,128,0,128,0,64,0,64,0,32,0,24,0,7,0,
+        1,0,1,0,1,0,2,0,2,0,4,0,24,0,224,0,
+        255,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+        0,0,0,0,0,0,0,0,0,0,0,0,0,0,255,0,
+        128,0,128,0,128,0,128,0,128,0,128,0,128,0,128,0,
+        1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,
+        24,24,24,24,24,24,24,24,24,24,24,24,0,0,0,0,
+        60,126,60,126,24,60,24,60,0,24,0,24,0,0,0,0
+    };
+    if(!loaded){VBK_REG=1;set_bkg_data(194,14,effects);VBK_REG=0;loaded=1;}
+}
+
+static void moving_crystal(uint8_t x) {
+    ink=UI_STANDARD;
+    tile(x,4,194);tile(x+1,4,195);tile(x,5,196);tile(x+1,5,197);
+}
+
+static void beacon_ring(uint8_t x,uint8_t y,uint8_t radius) {
+    uint8_t i,w=2+radius*2;ink=UI_STANDARD;x-=radius;y-=radius;
+    tile(x,y,198);tile(x+w-1,y,199);tile(x,y+w-1,200);tile(x+w-1,y+w-1,201);
+    for(i=1;i<w-1;i++){
+        tile(x+i,y,202);tile(x+i,y+w-1,203);
+        tile(x,y+i,204);tile(x+w-1,y+i,205);
+    }
+}
+
+static void camera_shift(int8_t dx,int8_t dy) {
+    static uint8_t source_tiles[240],source_attrs[240];
+    uint8_t x,y;int8_t sx,sy;uint16_t dest,source;
+    memcpy(source_tiles,bgtiles,240);memcpy(source_attrs,bgattrs,240);
+    for(y=0;y<12;y++)for(x=0;x<20;x++){
+        sx=(int8_t)x-dx;sy=(int8_t)y-dy;
+        if(sx<0)sx=0;if(sx>19)sx=19;if(sy<0)sy=0;if(sy>11)sy=11;
+        dest=(uint16_t)y*20+x;source=(uint16_t)sy*20+sx;
+        bgtiles[dest]=source_tiles[source];bgattrs[dest]=source_attrs[source];
+    }
+}
+
+static void speech(uint8_t x,uint8_t y,uint8_t w,const char *text,uint8_t tail) {
+    panel(x,y,w,3,UI_STANDARD);ink=UI_STANDARD;
+    print(x+(w-(uint8_t)strlen(text))/2,y+1,text,0);
+    tile(x+tail,y+3,'V'-32);
+}
+
+static void cinema_caption(const char *a,const char *b,const char *key,const char *text) {
+    ink=UI_STANDARD;fill(0,12,20,6,UI_STANDARD);
+    center(13,a);center(15,b);if(*key)action(17,key,text);
+}
+
+void render_cinema(void) BANKED {
+    uint8_t phase,i;int8_t shift;colored_screen=0;ink=UI_STANDARD;cinema_effects();
+    switch(game.scene) {
+        case PILOT_CARD:
+            load_cinema(CIN_PILOT);
+            print(6+(8-name_length)/2,9,game.name,0);
+            cinema_caption("READY TO EXPLORE?","","A","LET'S GO");break;
+        case DOOR_NOTE:
+            load_cinema(game.card||scene_ticks>=60?CIN_DOOR_CLOSE:CIN_DOOR_WIDE);
+            if(game.card||scene_ticks>=60)note_symbols(0);
+            cinema_caption("A NOTE ON THE DOOR","",game.card?"A":"", "DECODE");break;
+        case HATCH_OPEN:
+            load_cinema(game.card||scene_ticks>=45?CIN_HATCH_OPEN:CIN_HATCH_HALF);
+            cinema_caption(game.card?"LET'S PEEK INSIDE.":"","",game.card?"A":"","PEEK INSIDE");break;
+        case REPAIR:
+            load_cinema(game.repaired?CIN_CRYSTAL_IN:CIN_CRYSTAL_OUT);
+            if(!game.repaired)moving_crystal(7);
+            cinema_caption("THIS PART FELL OUT.","IT FITS HERE!","A",game.repaired?"LOOK INSIDE":"PUT IT BACK");break;
+        case CRYSTAL_REPAIR:
+            load_cinema(scene_ticks<72?CIN_CRYSTAL_OUT:CIN_CRYSTAL_IN);
+            if(scene_ticks<72)moving_crystal(7+scene_ticks/12);
+            cinema_caption("","","","");break;
+        case SHIP_WAKE:
+            load_cinema(game.card||scene_ticks>=96||(scene_ticks/24&1)?CIN_SHIP_BRIGHT:CIN_SHIP_DIM);
+            if(!game.card&&scene_ticks>=96){ink=UI_STANDARD;tile(anim_frame&1?4:15,anim_frame&2?3:5,131);}
+            cinema_caption(game.card?"THE SHIP IS AWAKE!":"","",game.card?"A":"","LOOK INSIDE");break;
+        case EMPTY_SEAT:
+            load_cinema(CIN_EMPTY_COCKPIT);
+            if(!game.card)cinema_caption("AN EMPTY SEAT!","","A","TAKE A LOOK");
+            else cinema_caption("SHOULD WE FLY?","LET'S CHECK THIS.","A","PLAY LOG");break;
+        case OWNER_LOG:
+            load_cinema(!game.card&&scene_ticks<120?CIN_MOON_APPROACH:CIN_MOON_LOG);
+            if(game.card)cinema_caption("SOUTH POLE","A NOTE FOR US!","A","READ NOTE");
+            else{
+                if(scene_ticks<120){
+                    /* The same marked location becomes the landing target. */
+                    beacon_ring(13,8,(anim_frame/3)&1);
+                    cinema_caption("HER MOON VISIT","SOUTH POLE","","");
+                }else if(scene_ticks<240){
+                    /* Keep the broken ship inside a pulsing warning frame. */
+                    beacon_ring(11,5,1+((anim_frame/3)&1));
+                    ink=UI_STANDARD;if(anim_frame&2)tile(12,1,143);
+                    cinema_caption("SHIP TROUBLE!","SHE GOT OUT.","","");
+                }else{
+                    /* A separate signal locates the pilot's escape pod. */
+                    beacon_ring(3,2,(anim_frame/3)&1);
+                    ink=UI_STANDARD;if(anim_frame&2)tile(6,2,134);
+                    cinema_caption("SHE IS SAFE.","SHE NEEDS A RIDE.","","");
+                }
+                ink=UI_STANDARD;print(1,17,"REC",0);
+                if(anim_frame&2)tile(0,17,128);
+                for(i=0;i<12;i++)tile(6+i,17,'-'-32);
+                tile(6+scene_ticks/30,17,'>'-32);
+            }
+            break;
+        case MOON_NOTE:
+            load_cinema(game.card||scene_ticks>=60?CIN_MOON_NOTE:CIN_MOON_LOG);
+            if(game.card||scene_ticks>=60)note_symbols(1);
+            cinema_caption("WHERE IS SHE?","",game.card?"A":"","DECODE");break;
+        case LAUNCH:
+            load_cinema(game.card?CIN_SEATED:CIN_SHIP_BRIGHT);
+            if(!game.card)cinema_caption("TO THE MOON!","","A","TAKE THE SEAT");
+            else{
+                cinema_caption("READY TO FLY?","","","");
+                panel(1,15,18,3,UI_STANDARD);action(16,"A","LIFT OFF!");
+            }
+            break;
+        case BOARDING:
+            load_cinema(scene_ticks<48?CIN_BOARDING:CIN_SEATED);
+            if(scene_ticks>=48&&(anim_frame&1)){ink=UI_STANDARD;tile(13,8,128);}
+            cinema_caption("","","","");break;
+        case ASCENT:
+            phase=scene_ticks<120?CIN_LAUNCH_GROUND:scene_ticks<240?CIN_LAUNCH_RISE:scene_ticks<360?CIN_LAUNCH_CLOUD:CIN_LAUNCH_SPACE;
+            load_cinema(phase);
+            if(scene_ticks<120){shift=anim_frame&1?1:0;camera_shift(shift,0);}
+            else if(scene_ticks<240){shift=-(int8_t)((scene_ticks-120)/32);camera_shift(0,shift);}
+            else if(scene_ticks<360){shift=(anim_frame&3)-1;camera_shift(shift,-1);}
+            else{shift=-(int8_t)((scene_ticks-360)/40);camera_shift(0,shift);}
+            ink=UI_STANDARD;
+            if(scene_ticks<120){tile(9+(anim_frame&1),10,207);if(anim_frame&2)tile(9+(anim_frame&1),11,207);}
+            else for(i=0;i<4;i++)tile(2+i*5,(anim_frame+i*3)%11,206);
+            cinema_caption("","","","");break;
+        case MOON_APPROACH:
+            load_cinema(CIN_MOON_APPROACH);
+            if((anim_frame&3)<2){ink=UI_STANDARD;tile(14,9,131);}
+            cinema_caption("SOUTH POLE",nav_ready?"READY TO LAND":"ARROWS STEER",nav_ready?"A":"","LAND");break;
+        case MOON_WALK:
+            load_cinema(CIN_MOON_SURFACE);
+            beacon_ring(15,7,(anim_frame/2)%3);
+            cinema_caption("SOUTH POLE",nav_ready?"":" > FOLLOW THE LIGHT",nav_ready?"A":"","MEET");break;
+        case FIRST_CONTACT:
+            load_cinema(game.card?CIN_ALIEN_CONFUSED:CIN_ALIEN_WAIT);
+            if(game.card==0){
+                if((anim_frame&7)<3){ink=UI_STANDARD;tile(16,2,131);}
+                cinema_caption("","","A","SAY HELLO");
+            }
+            else if(game.card==1){
+                speech(1,0,9,"HELLO!",5);speech(12,1,7,"?",1);
+                cinema_caption("","","A","TRY HI");
+            }
+            else{
+                speech(3,0,6,"HI!",3);panel(11,1,8,4,UI_STANDARD);ink=UI_STANDARD;
+                big(12,2,144,PLUS,0,0);big(16,2,148,HEART,0,0);tile(13,5,'V'-32);
+                cinema_caption("","","A","LOOK");
+            }
+            break;
+        case ALIEN_REPLY:
+            load_cinema(CIN_ALIEN_CODE);ink=UI_STANDARD;
+            print(9,8,"HI",0);print(5,9,"H=",0);big(7,9,144,PLUS,0,0);
+            print(10,9,"I=",0);big(12,9,148,HEART,0,0);
+            cinema_caption("LET'S TRY HER WAY.","","A","SEND A HELLO");break;
+        case FRIENDSHIP:
+            load_cinema(CIN_ALIEN_HAPPY);
+            if(!game.card){ink=UI_STANDARD;tile((anim_frame&1)?7:11,(anim_frame&2)?2:3,134);}
+            cinema_caption(game.card?"A NEW FRIEND!":"","",game.card?"A":"","NEXT");break;
+        default:break;
+    }
 }
 
 static void world(void) {
@@ -204,37 +434,22 @@ static void world(void) {
         case TITLE:
             load_scene(0);center(1,"CIPHERSPACE");
             if(has_save&&game.name[0]){strcpy(caption,"PILOT ");strcat(caption,game.name);center(3,caption);}
-            say("CHAPTER 1","THE EMPTY SHIP",has_save?"A CONTINUE  B NEW":"A PLAY");break;
+            say("CHAPTER 1","THE EMPTY SHIP",has_save?"":"A PLAY");
+            if(has_save){badge(0,17,"A","CONTINUE");badge(13,17,"B","NEW");}break;
         case NAME_SETUP:name_setup();break;
         case YARD:
-            load_scene(0);strcpy(caption,game.name);strcat(caption,"'S BACKYARD");label(caption);
-            if(!game.card)say("WHAT WAS THAT?","A SHIP LANDED!","A LOOK CLOSER");
+            load_scene(0);strcpy(caption,game.name);strcat(caption,"'S BACKYARD");
+            if(!game.card)say(caption,"A SHIP LANDED!","A LOOK CLOSER");
             else say("A NOTE ON THE DOOR","LET'S READ IT.","A READ THE NOTE");
             break;
-        case REPAIR:
-            load_scene(game.repaired?1:0);
-            if(game.repaired)say("YOU DID IT!","THE SHIP IS AWAKE!","A LOOK INSIDE");
-            else say("A STONE FELL OUT!","IT FITS HERE!","A PUT IT BACK");
-            break;
-        case EMPTY_SEAT:
-            load_scene(2);
-            if(!game.card)say("AN EMPTY SEAT!","WHO FLIES THE SHIP?","A LOOK AT THE NOTE");
-            else if(game.card==1)say("SHE IS SAFE.","SHE NEEDS A RIDE.","A CONTINUE");
-            else say("WHERE IS SHE?","A NOTE CAN HELP!","A READ IT");
-            break;
+        case REPAIR:case EMPTY_SEAT:render_cinema();break;
         case LAUNCH:
             if(game.card>=2){countdown();break;}
-            load_scene(game.card?2:1);
-            if(!game.card)say("THE SHIP CAN FLY!","LET'S GO FIND HER.","A TAKE THE SEAT");
-            else say("YOU ARE THE PILOT!","ARROWS STEER.","A LIFT OFF");
-            break;
+            render_cinema();break;
         case FLIGHT:
-            load_flight();label("TO THE MOON");flight_note("STEER TO THE MOON.","LET GO TO STOP.","SELECT: HELP");break;
+            load_flight();flight_note("STEER TO THE MOON.","LET GO TO STOP.","SELECT: HELP");break;
         case BEACON:
-            load_flight();
-            if(!game.card)flight_note("A LIGHT IS SAYING:","HERE I AM!","A CONTINUE");
-            else if(game.card==1)flight_note("IT IS A BEACON.","IT SHOWS THE WAY.","A CONTINUE");
-            else flight_note("FOLLOW THE GLOW.","SEND HER A HELLO!","A WRITE A MESSAGE");
+            load_flight();flight_note("FOLLOW THE GLOW.","IT SHOWS THE WAY.","A CONTINUE");
             break;
         case LANDING:
             load_scene(3);label("THE MOON");
@@ -242,8 +457,39 @@ static void world(void) {
             else say("A DIP IN THE MOON.","IT IS A CRATER!","A CONTINUE");
             break;
         case ENDING:
-            load_scene(3);say("HELLO, MOON!","CHAPTER 1 COMPLETE","A TITLE");break;
-        default:break;
+            load_cinema(CIN_ALIEN_HAPPY);say("CHAPTER 1 COMPLETE","NEXT: THE WAY HOME","A TITLE");break;
+        default:if(game.scene>=PILOT_CARD&&game.scene<=FRIENDSHIP)render_cinema();break;
+    }
+}
+
+static void signed_art_map(void) {
+    static uint8_t used[48],aliases[128];
+    uint8_t id,free_slot=0;
+    uint16_t i;
+    memset(used,0,sizeof(used));memset(aliases,255,sizeof(aliases));
+    /* Only UI glyphs reserve these logical slots. Art has its own numbering. */
+    for(i=0;i<360;i++){
+        id=bgtiles[i];
+        if((bgattrs[i]&8)&&id>=144&&id<192)used[id-144]=1;
+    }
+    for(i=0;i<240;i++){
+        id=bgtiles[i];
+        if(bgattrs[i]&8){
+            if(id<128){
+                if(aliases[id]==255){
+                    while(free_slot<48&&used[free_slot])free_slot++;
+                    /* A future overfull overlay must not read art as letters. */
+                    if(free_slot==48){bgtiles[i]=143;continue;}
+                    aliases[id]=144+free_slot;
+                    used[free_slot++]=1;
+                    load_alias(aliases[id],id);
+                }
+                bgtiles[i]=aliases[id];
+            }
+        }else if(id>=120){
+            /* Alternate art occupies 120 signed tiles in each VRAM bank. */
+            bgtiles[i]=id-120;bgattrs[i]|=8;
+        }
     }
 }
 
@@ -255,11 +501,12 @@ void render_game(void) BANKED {
 
     /* Build the next screen away from the visible tilemap. Dynamic glyphs
        have matching hidden copies, so changing one never tears the old view. */
-    render_tile_offset=next_page?64:0;
+    pending_art_signed=0;render_tile_offset=next_page?64:0;
     memset(bgtiles,0,360);memset(bgattrs,15,360);
     if(ui_mode!=PLAY)menus();
     else if(puzzle_id()!=255)puzzle();
     else world();
+    if(pending_art_signed)signed_art_map();
     for(i=0;i<360;i++){
         if((bgattrs[i]&8)&&bgtiles[i]>=144&&bgtiles[i]<192)bgtiles[i]+=render_tile_offset;
     }
@@ -284,12 +531,14 @@ void render_game(void) BANKED {
     }
     VBK_REG=0;page_valid[next_page]=1;
     ui_only=ui_mode!=PLAY||puzzle_id()!=255||game.scene==NAME_SETUP||(game.scene==LAUNCH&&game.card>=2);
-    show_ship=ui_mode==PLAY&&(game.scene==FLIGHT||game.scene==BEACON);
+    show_ship=ui_mode==PLAY&&(game.scene==FLIGHT||game.scene==BEACON||game.scene==MOON_APPROACH||game.scene==MOON_WALK);
     if(show_ship)sprite_position();
 
     /* Commit palette, map and sprite visibility together during VBlank.
        The LCD is enabled once after boot, and stays enabled for all input. */
     if(LCDC_REG&LCDCF_ON)wait_vbl_done();
+    display_art_signed=pending_art_signed;visible_art=!ui_only;
+    if(display_art_signed)LCDC_REG&=~LCDCF_BG8000;else LCDC_REG|=LCDCF_BG8000;
     if(ui_only)set_bkg_palette(0,8,ui_screen_palettes);
     else{set_bkg_palette(0,7,render_art_palettes);set_bkg_palette(7,1,ui_palette);}
     if(next_page)LCDC_REG|=LCDCF_BG9C00;else LCDC_REG&=~LCDCF_BG9C00;

@@ -2,11 +2,11 @@
 import hashlib,json,sys
 from pathlib import Path
 p=Path(sys.argv[1]);rom=p.read_bytes()
-assert len(rom)==131072, f'Expected 128 KiB, got {len(rom)}'
+assert len(rom)==262144, f'Expected 256 KiB, got {len(rom)}'
 assert rom[0x134:0x143].rstrip(b'\0')==b'CIPHERSPACE', 'Expected CIPHERSPACE cartridge title'
 assert rom[0x143]==0xC0, 'Expected Color-only header'
 assert rom[0x147]==0x1B, 'Expected MBC5 + SRAM + battery'
-assert rom[0x148]==2 and rom[0x149]==2, 'ROM or RAM size header mismatch'
+assert rom[0x148]==3 and rom[0x149]==2, 'ROM or RAM size header mismatch'
 check=0
 for b in rom[0x134:0x14D]:check=(check-b-1)&255
 assert check==rom[0x14D], 'Header checksum mismatch'

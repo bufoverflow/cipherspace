@@ -1,36 +1,4 @@
-"""Package only a ROM whose digest matches its completed emulator playthrough."""
-import hashlib
-import json
-import os
-import shutil
-import zipfile
-from pathlib import Path
-
-root = Path(__file__).resolve().parents[1]
-build = Path(os.environ.get('CIPHERSPACE_BUILD_DIR', 'build'))
-if not build.is_absolute():
-    build = root / build
-build = build.resolve()
-rom = build / 'cipherspace.gbc'
-report = build / 'playthrough-report.json'
-preview = build / 'screenshots/ux-contact-sheet.png'
-digest = hashlib.sha256(rom.read_bytes()).hexdigest()
-evidence = json.loads(report.read_text())
-assert evidence['rom_sha256'] == digest, 'Run make test for this ROM before packaging.'
-audit = evidence['frame_audit']
-assert audit['frames_observed'] > 0 and audit['lcd_disabled_frames'] == audit['uniform_frames'] == 0
-assert preview.is_file(), 'The tested build must include its UX preview.'
-release = root / 'dist/cipherspace-chapter1-v0.3.0'
-release.mkdir(parents=True, exist_ok=True)
-shutil.copy2(rom, release / rom.name)
-shutil.copy2(report, release / report.name)
-shutil.copy2(preview, release / 'preview.png')
-shutil.copy2(build / 'screenshots/cinema-contact-sheet.png', release / 'cinema-preview.png')
-shutil.copy2(build / 'screenshots/19-powered-ascent.gif', release / 'launch.gif')
-shutil.copy2(build / 'screenshots/12-crystal-repair.gif', release / 'repair.gif')
-shutil.copy2(build / 'screenshots/25-first-contact-motion.gif', release / 'first-contact.gif')
-(release / 'SHA256SUMS').write_text(f'{digest}  {rom.name}\n')
-(release / 'PLAY-AND-FLASH.txt').write_text(f'''CIPHERSPACE
+CIPHERSPACE
 Chapter 1: The Empty Ship | v0.3.0
 
 Choose your name, suit up, discover a ship, and rescue its pilot on the Moon.
@@ -72,7 +40,7 @@ Insert the DevDay cartridge, power on the Chromatic, and connect USB.
 From this extracted folder, run:
   chromatic-cli list-devices
   chromatic-cli detect-cart --all
-  chromatic-cli write-homebrew ./cipherspace.gbc --expect-sha256 {digest}
+  chromatic-cli write-homebrew ./cipherspace.gbc --expect-sha256 366accfcd96683aa3def65a80b84150d9eb408ecd03d96bf7c3597bc3e8cf2ba
 
 Writing replaces the current cartridge game and may erase its saves.
 Review the selected cartridge before accepting the CLI confirmation.
@@ -80,19 +48,6 @@ After a verified write, disconnect USB and test boot, controls, sound and saves.
 
 VALIDATION
 Native Game Boy Color ROM: 256 KiB, MBC5, 8 KiB battery RAM.
-{evidence['checks_passed']} emulator checks passed against the included ROM digest.
-{audit['frames_observed']} gameplay frames audited: no blank or LCD-off frames.
+202 emulator checks passed against the included ROM digest.
+7725 gameplay frames audited: no blank or LCD-off frames.
 The preview contains real emulator frames. Native cartridge validation is pending.
-''')
-
-archive = release.parent / (release.name + '.zip')
-with zipfile.ZipFile(archive, 'w', compression=zipfile.ZIP_DEFLATED) as z:
-    for file in sorted(release.iterdir()):
-        info = zipfile.ZipInfo(release.name + '/' + file.name)
-        info.compress_type = zipfile.ZIP_DEFLATED
-        info.external_attr = 0o100644 << 16
-        z.writestr(info, file.read_bytes())
-with zipfile.ZipFile(archive) as z:
-    assert z.testzip() is None
-    assert hashlib.sha256(z.read(release.name + '/' + rom.name)).hexdigest() == digest
-print(f'Release: {archive}\nROM: {release / rom.name}\nSHA-256: {digest}')

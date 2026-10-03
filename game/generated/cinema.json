@@ -1,0 +1,485 @@
+{
+  "width": 160,
+  "height": 96,
+  "reservedUIPalette": 7,
+  "frames": [
+    {
+      "index": 0,
+      "name": "PILOT",
+      "bank": 7,
+      "source": [
+        "hero-repair-cockpit.png",
+        0
+      ],
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "colorsPerPalette": 4,
+      "totalBytes": 4136,
+      "weightedError": 58.17298595,
+      "sha256": "404ac195f9b1013fc3d8d38e3c37eb9d4ec20579dbf6f94f53f9ad5e0b899dc2"
+    },
+    {
+      "index": 1,
+      "name": "DOOR_WIDE",
+      "bank": 7,
+      "source": [
+        "hatch-repair.png",
+        0
+      ],
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "colorsPerPalette": 4,
+      "totalBytes": 4136,
+      "weightedError": 76.78507292,
+      "sha256": "376a78f4be5fb356322f74f458fdc484a2dfa527c9b6458254cb8b822fc609cf"
+    },
+    {
+      "index": 2,
+      "name": "DOOR_CLOSE",
+      "bank": 7,
+      "source": [
+        "hatch-repair.png",
+        0
+      ],
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "colorsPerPalette": 4,
+      "totalBytes": 4136,
+      "weightedError": 48.47920912,
+      "sha256": "49dd2d2ed09d99654bc06ec681d45b1503d8721847d010c97e41780f8324ea00"
+    },
+    {
+      "index": 3,
+      "name": "HATCH_HALF",
+      "bank": 8,
+      "source": [
+        "hatch-repair.png",
+        1
+      ],
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "colorsPerPalette": 4,
+      "totalBytes": 4136,
+      "weightedError": 76.80146983,
+      "sha256": "9fc9379b609d04d316db0822f07b0819ce10e2ca29cf719fd659bfe91032f0bc"
+    },
+    {
+      "index": 4,
+      "name": "HATCH_OPEN",
+      "bank": 8,
+      "source": [
+        "hero-repair-cockpit.png",
+        1
+      ],
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "colorsPerPalette": 4,
+      "totalBytes": 4136,
+      "weightedError": 70.37447107,
+      "sha256": "306e678eeaf5ace698f57bf6ef332230741a520f7caa384105551651da96c83f"
+    },
+    {
+      "index": 5,
+      "name": "CRYSTAL_OUT",
+      "bank": 8,
+      "source": [
+        "hatch-repair.png",
+        2
+      ],
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "colorsPerPalette": 4,
+      "totalBytes": 4136,
+      "weightedError": 45.42049276,
+      "sha256": "29f9e7e04249813a3ae622f4bcf952d754b15fd6856d097586df4d30a9c718f8"
+    },
+    {
+      "index": 6,
+      "name": "CRYSTAL_IN",
+      "bank": 9,
+      "source": [
+        "hatch-repair.png",
+        3
+      ],
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "colorsPerPalette": 4,
+      "totalBytes": 4136,
+      "weightedError": 59.32961828,
+      "sha256": "38429f8254f8a225d23ed074ac808b7906916d2848344eaa7173743e41684616"
+    },
+    {
+      "index": 7,
+      "name": "SHIP_DIM",
+      "bank": 9,
+      "source": [
+        "../opening-scenes-v2.png",
+        1
+      ],
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "colorsPerPalette": 4,
+      "totalBytes": 4136,
+      "weightedError": 31.69394888,
+      "sha256": "b058b052f71a6cadb40cb62a67c07510c1c78867c9029d7f7406651066128447"
+    },
+    {
+      "index": 8,
+      "name": "SHIP_BRIGHT",
+      "bank": 9,
+      "source": [
+        "../opening-scenes-v2.png",
+        1
+      ],
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "colorsPerPalette": 4,
+      "totalBytes": 4136,
+      "weightedError": 43.84404948,
+      "sha256": "043a4c7eda55556b989f6706173a951c264a134b5c07475092d68caac636b04c"
+    },
+    {
+      "index": 9,
+      "name": "EMPTY_COCKPIT",
+      "bank": 10,
+      "source": [
+        "../opening-scenes-v2.png",
+        2
+      ],
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "colorsPerPalette": 4,
+      "totalBytes": 4136,
+      "weightedError": 47.84604363,
+      "sha256": "21503d9722acb1c0e65c5975528c51e2ebbe40c9e7c002902f483b4a9071b0bc"
+    },
+    {
+      "index": 10,
+      "name": "MOON_LOG",
+      "bank": 10,
+      "source": [
+        "accident-launch.png",
+        0
+      ],
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "colorsPerPalette": 4,
+      "totalBytes": 4136,
+      "weightedError": 54.32940022,
+      "sha256": "391d4763f429187b20663596cc19e9b7a730f559d476f12766f0789d34d35461"
+    },
+    {
+      "index": 11,
+      "name": "MOON_NOTE",
+      "bank": 10,
+      "source": [
+        "hero-repair-cockpit.png",
+        3
+      ],
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "colorsPerPalette": 4,
+      "totalBytes": 4136,
+      "weightedError": 38.20730569,
+      "sha256": "cdbcb667c3e3da9f917664468e954e508b9781ea7bfd17cd5a811094577ada84"
+    },
+    {
+      "index": 12,
+      "name": "BOARDING",
+      "bank": 11,
+      "source": [
+        "hero-repair-cockpit.png",
+        1
+      ],
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "colorsPerPalette": 4,
+      "totalBytes": 4136,
+      "weightedError": 68.31464966,
+      "sha256": "8fe87f997fb19c0c77d1d1aef06700434a314543b47a3f6866b9b4489c93f268"
+    },
+    {
+      "index": 13,
+      "name": "SEATED",
+      "bank": 11,
+      "source": [
+        "hero-repair-cockpit.png",
+        3
+      ],
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "colorsPerPalette": 4,
+      "totalBytes": 4136,
+      "weightedError": 58.56614835,
+      "sha256": "c1659f6016ffafe4cb95584187d53bf1a43a0bf39f26f488a95e76ff10b4c7b9"
+    },
+    {
+      "index": 14,
+      "name": "LAUNCH_GROUND",
+      "bank": 11,
+      "source": [
+        "accident-launch.png",
+        1
+      ],
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "colorsPerPalette": 4,
+      "totalBytes": 4136,
+      "weightedError": 83.15935726,
+      "sha256": "d7a38d1555a7b8d7884dc51e71c0fc8bf3568fe56bf3cd3e9ca9826c5b69a36e"
+    },
+    {
+      "index": 15,
+      "name": "LAUNCH_RISE",
+      "bank": 12,
+      "source": [
+        "accident-launch.png",
+        2
+      ],
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "colorsPerPalette": 4,
+      "totalBytes": 4136,
+      "weightedError": 73.72755784,
+      "sha256": "ea9b5cee555cb4bf9bffc67886e711db63134fae1797e881b30f12881e1cc0fb"
+    },
+    {
+      "index": 16,
+      "name": "LAUNCH_CLOUD",
+      "bank": 12,
+      "source": [
+        "accident-launch.png",
+        3
+      ],
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "colorsPerPalette": 4,
+      "totalBytes": 4136,
+      "weightedError": 51.16738823,
+      "sha256": "e273e449cd6f6f00d1bad2b81d23c6273677b4723b7b2d66f0c980a5346c1589"
+    },
+    {
+      "index": 17,
+      "name": "LAUNCH_SPACE",
+      "bank": 12,
+      "source": [
+        "space-moon-alien.png",
+        0
+      ],
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "colorsPerPalette": 4,
+      "totalBytes": 4136,
+      "weightedError": 58.99230289,
+      "sha256": "4c645fabd0c4dc17aee84c52d3fc481f802b5fd4824d2224b066c09289e85e75"
+    },
+    {
+      "index": 18,
+      "name": "MOON_APPROACH",
+      "bank": 13,
+      "source": [
+        "space-moon-alien.png",
+        1
+      ],
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "colorsPerPalette": 4,
+      "totalBytes": 4136,
+      "weightedError": 23.7380897,
+      "sha256": "6bf85ff15d5e6735fadd5999eb1cd690394811705f7473731fde895707f766b2"
+    },
+    {
+      "index": 19,
+      "name": "MOON_SURFACE",
+      "bank": 13,
+      "source": [
+        "space-moon-alien.png",
+        2
+      ],
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "colorsPerPalette": 4,
+      "totalBytes": 4136,
+      "weightedError": 32.90145713,
+      "sha256": "c5682bc27fd2efed740dd8d09584fea2709047a59270dcf3ee98a71cdd89e337"
+    },
+    {
+      "index": 20,
+      "name": "ALIEN_WAIT",
+      "bank": 13,
+      "source": [
+        "space-moon-alien.png",
+        3
+      ],
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "colorsPerPalette": 4,
+      "totalBytes": 4136,
+      "weightedError": 49.00287538,
+      "sha256": "cd52100f1b706add5fa3692b560f2a988ac7c95b585d3f3f4b692fda80f6138a"
+    },
+    {
+      "index": 21,
+      "name": "ALIEN_CONFUSED",
+      "bank": 14,
+      "source": [
+        "meeting.png",
+        0
+      ],
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "colorsPerPalette": 4,
+      "totalBytes": 4136,
+      "weightedError": 86.37961819,
+      "sha256": "5ee218dc50d7ccab7d16c84c5b102fe4f514a130623835f318da30c9db8bbb87"
+    },
+    {
+      "index": 22,
+      "name": "ALIEN_CODE",
+      "bank": 14,
+      "source": [
+        "meeting.png",
+        1
+      ],
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "colorsPerPalette": 4,
+      "totalBytes": 4136,
+      "weightedError": 77.41328261,
+      "sha256": "f18e8720967d0247bd3ee6526922d554128018360267554ed29ed981ae554a99"
+    },
+    {
+      "index": 23,
+      "name": "ALIEN_HAPPY",
+      "bank": 14,
+      "source": [
+        "meeting.png",
+        2
+      ],
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "colorsPerPalette": 4,
+      "totalBytes": 4136,
+      "weightedError": 87.0430011,
+      "sha256": "43df6ebdd0e1c1a079de4196666966c41d2530cd0d06f610dd4fe88789106d22"
+    }
+  ],
+  "actorBytes": 208,
+  "actorBank": 15,
+  "sourceHashes": [
+    {
+      "file": "../design-assets/cinema/hero-repair-cockpit.png",
+      "sha256": "a6e4f17cdc5574b13d7f8d31170532b0aa296dc358efa6e0814b23c91845e6ad"
+    },
+    {
+      "file": "../design-assets/cinema/hatch-repair.png",
+      "sha256": "6ed57e5e094a5a0fd0742c1c458dd8feba01e20780e5f3ba33c3627595e807e5"
+    },
+    {
+      "file": "../design-assets/opening-scenes-v2.png",
+      "sha256": "80c2ce373ae5d85077a09ca973cd9aa2a0f7c678c18c729d75fb8efdcd85dd84"
+    },
+    {
+      "file": "../design-assets/cinema/accident-launch.png",
+      "sha256": "2a6a199d1cf538bbc93b11c62ce11f0ce187cbeb9b56b357d6a90fb3e56f76e5"
+    },
+    {
+      "file": "../design-assets/cinema/space-moon-alien.png",
+      "sha256": "71cefd727535ed29c71d9a87f99a1eccbc57ae8f88f888dad2477dd71cbee13c"
+    },
+    {
+      "file": "../design-assets/cinema/meeting.png",
+      "sha256": "f39fe5b551159ec6a5e9547ec76cf7012b24d52c86f25a1794a2e9b3766ae14b"
+    }
+  ],
+  "overlays": {
+    "pilotName": {
+      "x": 48,
+      "y": 72,
+      "w": 64,
+      "h": 8
+    },
+    "doorNote": {
+      "x": 32,
+      "y": 32,
+      "w": 96,
+      "h": 32
+    },
+    "moonNote": {
+      "x": 32,
+      "y": 32,
+      "w": 96,
+      "h": 32
+    },
+    "sharedCode": {
+      "x": 40,
+      "y": 72,
+      "w": 80,
+      "h": 16
+    },
+    "crystalStart": {
+      "x": 68,
+      "y": 38
+    },
+    "crystalSocket": {
+      "x": 103,
+      "y": 38
+    },
+    "southPoleTarget": {
+      "x": 118,
+      "y": 75
+    },
+    "surfaceBeacon": {
+      "x": 132,
+      "y": 65
+    }
+  }
+}
