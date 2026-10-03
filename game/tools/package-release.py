@@ -20,33 +20,33 @@ assert evidence['rom_sha256'] == digest, 'Run make test for this ROM before pack
 audit = evidence['frame_audit']
 assert audit['frames_observed'] > 0 and audit['lcd_disabled_frames'] == audit['uniform_frames'] == 0
 assert preview.is_file(), 'The tested build must include its UX preview.'
-release = root / 'dist/cipherspace-chapter1-v0.3.0'
+release = root / 'dist/cipherspace-chapter1-v0.3.1'
 release.mkdir(parents=True, exist_ok=True)
 shutil.copy2(rom, release / rom.name)
 shutil.copy2(report, release / report.name)
 shutil.copy2(preview, release / 'preview.png')
 shutil.copy2(build / 'screenshots/cinema-contact-sheet.png', release / 'cinema-preview.png')
+shutil.copy2(build / 'screenshots/reading-contact-sheet.png', release / 'reading-preview.png')
 shutil.copy2(build / 'screenshots/19-powered-ascent.gif', release / 'launch.gif')
 shutil.copy2(build / 'screenshots/12-crystal-repair.gif', release / 'repair.gif')
 shutil.copy2(build / 'screenshots/25-first-contact-motion.gif', release / 'first-contact.gif')
+shutil.copy2(build / 'screenshots/15-turn-forward-1.gif', release / 'log-book.gif')
 (release / 'SHA256SUMS').write_text(f'{digest}  {rom.name}\n')
 (release / 'PLAY-AND-FLASH.txt').write_text(f'''CIPHERSPACE
-Chapter 1: The Empty Ship | v0.3.0
+Chapter 1: The Empty Ship | v0.3.1
 
 Choose your name, suit up, discover a ship, and rescue its pilot on the Moon.
 
 WHAT CHANGED
-A visual adventure replaces the old sequence of reading cards. Meet your girl
-pilot with her name on her suit. Inspect real notes before decoding them, open
-the hatch, replace a glowing crystal, watch the ship wake up, and climb aboard.
-A cockpit recording explains why its owner needs rescue at the Moon's south pole.
-Count down from 10, lift off through the clouds, steer to the Moon, choose a safe
-landing spot, and walk toward the signal. Try speaking to the alien and discover
-how the ship's shared symbol code lets you send a greeting she understands.
+Round A/B icons resemble the console buttons, and story actions have more space.
+The pilot wears a smaller name patch. Scrolling instructions pause at each end
+and move slowly. The illustrated log book lets the reader turn pages and look
+back at their own pace. The pilot's appearance and suit stay consistent across
+scenes, and steering to the Moon uses the same illustrated style as the story.
 
 CONTROLS
 Name: D-pad selects A-Z; A adds; B erases; Start finishes.
-Button names appear in separate badges beside each action.
+A and B appear as round buttons beside each action. Start and Select use pills.
 Puzzles: Left/Right chooses; Up/Down moves the linked symbol-and-answer cursor.
 A applies a choice; B undoes. Select offers free help. Start pauses.
 The quiet blue cursor connects the symbol to its answer. Amber marks your choice.
@@ -55,6 +55,7 @@ Flight: arrows steer, release to stop. Approach the Moon, then steer to the
 south-pole landing light and press A when LAND appears. On the surface, walk
 left/right toward the light; press A when MEET appears.
 The countdown and ascent play through before steering begins.
+Log book: A turns a page; B looks back. Pages stay open until the reader turns them.
 
 SAVES
 This overhaul starts fresh: v0.1/v0.2 saves are not loaded or migrated.

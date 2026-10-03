@@ -12,7 +12,8 @@ static const CinemaFrame pictures[CINEMA_FRAME_COUNT]={
     PICTURE(0),PICTURE(1),PICTURE(2),PICTURE(3),PICTURE(4),PICTURE(5),
     PICTURE(6),PICTURE(7),PICTURE(8),PICTURE(9),PICTURE(10),PICTURE(11),
     PICTURE(12),PICTURE(13),PICTURE(14),PICTURE(15),PICTURE(16),PICTURE(17),
-    PICTURE(18),PICTURE(19),PICTURE(20),PICTURE(21),PICTURE(22),PICTURE(23)
+    PICTURE(18),PICTURE(19),PICTURE(20),PICTURE(21),PICTURE(22),PICTURE(23),
+    PICTURE(24)
 };
 
 void load_cinema(uint8_t index) NONBANKED {
@@ -28,6 +29,8 @@ void load_cinema(uint8_t index) NONBANKED {
 void load_cinema_actors(void) NONBANKED {
     uint8_t bank=CURRENT_BANK;
     SWITCH_ROM(15);VBK_REG=0;
+    set_sprite_data(240,4,cinema_ship_tiles);
+    set_sprite_palette(3,1,cinema_ship_palette);
     set_sprite_data(244,12,cinema_actor_tiles);
     set_sprite_palette(1,2,cinema_actor_palettes);
     SWITCH_ROM(bank);

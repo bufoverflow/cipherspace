@@ -15,7 +15,7 @@ const uint16_t ui_screen_palettes[32] = {
     RGB(4,7,12), RGB(8,12,18), RGB(14,20,24), RGB(27,29,30),
     RGB(2,4,8), RGB(13,27,23), RGB(30,24,13), RGB(31,31,29)
 };
-static uint8_t ink=UI_STANDARD, colored_screen;
+static uint8_t ink=UI_STANDARD, colored_screen, sprite_tiles_reserved;
 
 static void tile(uint8_t x,uint8_t y,uint8_t value) {
     if(x<20&&y<18){bgtiles[(uint16_t)y*20+x]=value;bgattrs[(uint16_t)y*20+x]=ink;}
@@ -54,15 +54,28 @@ static void rule(uint8_t y) {uint8_t x;for(x=0;x<20;x++)tile(x,y,139);}
 
 static void label(const char *s) {ink=UI_STANDARD;print(1,0,s,0);}
 
+static uint8_t badge_width(const char *key) {
+    if((key[0]=='A'||key[0]=='B')&&!key[1])return 1;
+    if(!strcmp(key,"A+B"))return 3;
+    return (uint8_t)strlen(key)+2;
+}
+
 static void badge(uint8_t x,uint8_t y,const char *key,const char *action) {
     uint8_t c,prior=ink;ink=UI_STANDARD;
+    if((key[0]=='A'||key[0]=='B')&&!key[1]){
+        tile(x,y,key[0]=='A'?65:66);print(x+2,y,action,0);ink=prior;return;
+    }
+    if(!strcmp(key,"A+B")){
+        tile(x,y,65);print(x+1,y,"+",0);tile(x+2,y,66);
+        print(x+4,y,action,0);ink=prior;return;
+    }
     tile(x++,y,64);
     while(*key&&x<20){c=*key++;tile(x++,y,c>=32&&c<96?c-32+64:64);}
     tile(x++,y,64);print(x+1,y,action,0);ink=prior;
 }
 
 static void action(uint8_t y,const char *key,const char *text) {
-    uint8_t n=(uint8_t)(strlen(key)+strlen(text)+3);
+    uint8_t n=badge_width(key)+(uint8_t)strlen(text)+1;
     badge(n<20?(20-n)/2:0,y,key,text);
 }
 
@@ -77,14 +90,14 @@ static void footer(uint8_t y,const char *text) {
 
 static void say(const char *a,const char *b,const char *foot) {
     /* Keep the cabin and its empty seat visible above a compact caption. */
-    ink=UI_STANDARD;panel(0,12,20,5,UI_STANDARD);center(13,a);center(15,b);
-    fill(0,17,20,1,UI_STANDARD);footer(17,foot);
+    ink=UI_STANDARD;panel(0,12,20,4,UI_STANDARD);center(13,a);center(14,b);
+    fill(0,16,20,2,UI_STANDARD);footer(17,foot);
 }
 
 static void flight_note(const char *a,const char *b,const char *foot) {
     /* Keep all 96 sky pixels available to the rocket, including older saves. */
-    ink=UI_STANDARD;panel(0,12,20,5,UI_STANDARD);
-    center(13,a);center(15,b);fill(0,17,20,1,UI_STANDARD);footer(17,foot);
+    ink=UI_STANDARD;panel(0,12,20,4,UI_STANDARD);
+    center(13,a);center(14,b);fill(0,16,20,2,UI_STANDARD);footer(17,foot);
 }
 
 static void big(uint8_t x,uint8_t y,uint8_t base,uint8_t symbol,uint8_t letter,uint8_t selected) {
@@ -101,11 +114,14 @@ static void pair(uint8_t x,uint8_t y,uint8_t symbol) {
 }
 
 static void ticker(const char *text) {
-    uint8_t x,n=(uint8_t)strlen(text),index;
-    if(n<=20){center(0,text);return;}
+    uint8_t x,n=(uint8_t)strlen(text),span;
+    uint16_t t;
+    if(n<=20){ticker_offset=0;center(0,text);return;}
+    span=n-20;t=scene_ticks%(360u+45u*span);
+    ticker_offset=t<180?0:(t-180)/45+1;
+    if(ticker_offset>span)ticker_offset=span;
     for(x=0;x<20;x++){
-        index=(ticker_offset+x)%(n+4);
-        tile(x,0,index<n?text[index]-32:0);
+        tile(x,0,text[ticker_offset+x]-32);
     }
 }
 
@@ -304,9 +320,91 @@ static void speech(uint8_t x,uint8_t y,uint8_t w,const char *text,uint8_t tail) 
     tile(x+tail,y+3,'V'-32);
 }
 
+static void name_patch(void) {
+    static uint8_t bits[16];
+    uint8_t n=(uint8_t)strlen(game.name),cols,width,left,first,tx,ty,x,y,px,py;
+    uint8_t color,letter,column,glyph,logical;
+    if(!n)return;if(n>8)n=8;
+    cols=(6*n+15)/8;width=cols*8;left=(21-cols)/2;
+    first=(width-(6*n-1))/2;ink=UI_STANDARD;
+    for(ty=0;ty<2;ty++)for(tx=0;tx<cols;tx++){
+        memset(bits,0,sizeof(bits));
+        for(y=0;y<8;y++)for(x=0;x<8;x++){
+            px=tx*8+x;py=ty*8+y;
+            /* Tan corner pixels blend into the suit; gold dots form stitches. */
+            color=((px<2||px>=width-2)&&(py<2||py>=14))?2:0;
+            if(((py==1||py==14)&&px>=3&&px<width-3&&!(px&1))||
+               ((px==1||px==width-2)&&py>=3&&py<13&&!(py&1)))color=2;
+            if(py>=4&&py<11&&px>=first&&px<first+6*n-1){
+                letter=(px-first)/6;column=(px-first)%6;
+                glyph=font_bits[((uint16_t)game.name[letter]-32)*8+py-4];
+                if(column<5&&(glyph&(64u>>column)))color=3;
+            }
+            if(color&1)bits[y*2]|=128u>>x;
+            if(color&2)bits[y*2+1]|=128u>>x;
+        }
+        logical=144+ty*cols+tx;load_ui_tile(logical,bits);tile(left+tx,8+ty,logical);
+    }
+}
+
+static void prepare_book(void) {
+    static uint8_t bits[16];
+    uint8_t closed=game.scene==EMPTY_SEAT,cols=closed?2:3,tx,ty,x,y,px,py,color,depth;
+    if(!closed&&!book_turn)return;
+    sprite_tiles_reserved=closed?4:9;depth=4+(uint16_t)book_turn*20/24;
+    for(ty=0;ty<cols;ty++)for(tx=0;tx<cols;tx++){
+        memset(bits,0,sizeof(bits));
+        for(y=0;y<8;y++)for(x=0;x<8;x++){
+            px=tx*8+x;py=ty*8+y;color=0;
+            if(closed){
+                if(px>=1&&px<=14&&py>=2&&py<=14){
+                    color=1;
+                    if(px<=3||px==14||py==2)color=2;
+                    if(py>=12&&px>=4)color=py==13?1:3;
+                    if((px==8&&py>=5&&py<=9)||(py==7&&px>=6&&px<=10))color=3;
+                }
+            }else if(46-px-py<depth)color=46-px-py==depth-1?2:3;
+            if(color&1)bits[y*2]|=128u>>x;
+            if(color&2)bits[y*2+1]|=128u>>x;
+        }
+        load_ui_tile(144+ty*cols+tx,bits);
+    }
+}
+
+static void book_sprites(void) {
+    uint8_t i=0,row,col,which,x,y,r,w;
+    if(game.scene==EMPTY_SEAT){
+        for(row=0;row<2;row++)for(col=0;col<2;col++){
+            set_sprite_tile(i,144+row*2+col+render_tile_offset);set_sprite_prop(i,8);
+            move_sprite(i++,32+col*8,80+row*8);
+        }
+        return;
+    }
+    /* Transparent sprite edges keep every illustration pixel behind the page. */
+    for(row=0;row<12;row++){
+        which=!row?135:row==11?137:141;
+        set_sprite_tile(i,which);set_sprite_prop(i,8);move_sprite(i++,11,16+row*8);
+        which=!row?136:row==11?138:142;
+        set_sprite_tile(i,which);set_sprite_prop(i,8);move_sprite(i++,158,16+row*8);
+    }
+    /* Four transparent corners locate the subject without hiding its face. */
+    x=!game.card?13:game.card==1?11:3;y=!game.card?8:game.card==1?5:2;
+    r=((anim_frame/3)&1)+(game.card==1?1:0);w=2+r*2;x-=r;y-=r;
+    for(row=0;row<2;row++)for(col=0;col<2;col++){
+        set_sprite_tile(i,198+row*2+col);set_sprite_prop(i,8);
+        move_sprite(i++,8+(x+col*(w-1))*8,16+(y+row*(w-1))*8);
+    }
+    if(book_turn)for(row=0;row<3;row++)for(col=0;col<3;col++){
+        x=book_direction?136+col*8:16-col*8;
+        set_sprite_tile(i,144+row*3+col+render_tile_offset);
+        set_sprite_prop(i,8|(book_direction?0:32));move_sprite(i++,x+8,88+row*8);
+    }
+}
+
 static void cinema_caption(const char *a,const char *b,const char *key,const char *text) {
     ink=UI_STANDARD;fill(0,12,20,6,UI_STANDARD);
-    center(13,a);center(15,b);if(*key)action(17,key,text);
+    if(*a||*b){panel(0,12,20,4,UI_STANDARD);center(13,a);center(14,b);}
+    if(*key)action(17,key,text);
 }
 
 void render_cinema(void) BANKED {
@@ -314,7 +412,7 @@ void render_cinema(void) BANKED {
     switch(game.scene) {
         case PILOT_CARD:
             load_cinema(CIN_PILOT);
-            print(6+(8-name_length)/2,9,game.name,0);
+            name_patch();
             cinema_caption("READY TO EXPLORE?","","A","LET'S GO");break;
         case DOOR_NOTE:
             load_cinema(game.card||scene_ticks>=60?CIN_DOOR_CLOSE:CIN_DOOR_WIDE);
@@ -336,32 +434,28 @@ void render_cinema(void) BANKED {
             if(!game.card&&scene_ticks>=96){ink=UI_STANDARD;tile(anim_frame&1?4:15,anim_frame&2?3:5,131);}
             cinema_caption(game.card?"THE SHIP IS AWAKE!":"","",game.card?"A":"","LOOK INSIDE");break;
         case EMPTY_SEAT:
-            load_cinema(CIN_EMPTY_COCKPIT);
-            if(!game.card)cinema_caption("AN EMPTY SEAT!","","A","TAKE A LOOK");
-            else cinema_caption("SHOULD WE FLY?","LET'S CHECK THIS.","A","PLAY LOG");break;
+            load_cinema(CIN_EMPTY_COCKPIT);prepare_book();
+            if(!game.card)cinema_caption("AN EMPTY SEAT!","",scene_ticks>=90?"A":"","TAKE A LOOK");
+            else cinema_caption("SHOULD WE FLY?","LET'S CHECK THIS.",scene_ticks>=90?"A":"","OPEN BOOK");break;
         case OWNER_LOG:
-            load_cinema(!game.card&&scene_ticks<120?CIN_MOON_APPROACH:CIN_MOON_LOG);
-            if(game.card)cinema_caption("SOUTH POLE","A NOTE FOR US!","A","READ NOTE");
-            else{
-                if(scene_ticks<120){
-                    /* The same marked location becomes the landing target. */
-                    beacon_ring(13,8,(anim_frame/3)&1);
-                    cinema_caption("HER MOON VISIT","SOUTH POLE","","");
-                }else if(scene_ticks<240){
-                    /* Keep the broken ship inside a pulsing warning frame. */
-                    beacon_ring(11,5,1+((anim_frame/3)&1));
-                    ink=UI_STANDARD;if(anim_frame&2)tile(12,1,143);
-                    cinema_caption("SHIP TROUBLE!","SHE GOT OUT.","","");
-                }else{
-                    /* A separate signal locates the pilot's escape pod. */
-                    beacon_ring(3,2,(anim_frame/3)&1);
-                    ink=UI_STANDARD;if(anim_frame&2)tile(6,2,134);
-                    cinema_caption("SHE IS SAFE.","SHE NEEDS A RIDE.","","");
-                }
-                ink=UI_STANDARD;print(1,17,"REC",0);
-                if(anim_frame&2)tile(0,17,128);
-                for(i=0;i<12;i++)tile(6+i,17,'-'-32);
-                tile(6+scene_ticks/30,17,'>'-32);
+            load_cinema(game.card?CIN_MOON_LOG:CIN_MOON_APPROACH);prepare_book();
+            if(!game.card){
+                /* The same marked location becomes the landing target. */
+                cinema_caption("HER MOON VISIT","SOUTH POLE","","");
+            }else if(game.card==1){
+                /* Keep the broken ship inside a pulsing warning frame. */
+                ink=UI_STANDARD;if(anim_frame&2)tile(12,1,143);
+                cinema_caption("SHIP TROUBLE!","SHE GOT OUT.","","");
+            }else{
+                /* A separate signal locates the pilot's escape pod. */
+                ink=UI_STANDARD;if(anim_frame&2)tile(6,2,134);
+                cinema_caption("SHE IS SAFE.","SHE NEEDS A RIDE.","","");
+            }
+            ink=UI_STANDARD;print(1,12,"LOG BOOK",0);
+            tile(16,12,'1'+game.card-32);print(17,12,"/3",0);
+            if(!book_turn){
+                if(game.card){badge(1,17,"A",game.card==2?"READ NOTE":"TURN PAGE");badge(13,17,"B","BACK");}
+                else action(17,"A","TURN PAGE");
             }
             break;
         case MOON_NOTE:
@@ -371,10 +465,7 @@ void render_cinema(void) BANKED {
         case LAUNCH:
             load_cinema(game.card?CIN_SEATED:CIN_SHIP_BRIGHT);
             if(!game.card)cinema_caption("TO THE MOON!","","A","TAKE THE SEAT");
-            else{
-                cinema_caption("READY TO FLY?","","","");
-                panel(1,15,18,3,UI_STANDARD);action(16,"A","LIFT OFF!");
-            }
+            else cinema_caption("READY TO FLY?","","A","LIFT OFF!");
             break;
         case BOARDING:
             load_cinema(scene_ticks<48?CIN_BOARDING:CIN_SEATED);
@@ -447,7 +538,7 @@ static void world(void) {
             if(game.card>=2){countdown();break;}
             render_cinema();break;
         case FLIGHT:
-            load_flight();flight_note("STEER TO THE MOON.","LET GO TO STOP.","SELECT: HELP");break;
+            load_cinema(CIN_FLIGHT);flight_note("STEER TO THE MOON.","LET GO TO STOP.","SELECT: HELP");break;
         case BEACON:
             load_flight();flight_note("FOLLOW THE GLOW.","IT SHOWS THE WAY.","A CONTINUE");
             break;
@@ -467,6 +558,7 @@ static void signed_art_map(void) {
     uint8_t id,free_slot=0;
     uint16_t i;
     memset(used,0,sizeof(used));memset(aliases,255,sizeof(aliases));
+    for(i=0;i<sprite_tiles_reserved;i++)used[i]=1;
     /* Only UI glyphs reserve these logical slots. Art has its own numbering. */
     for(i=0;i<360;i++){
         id=bgtiles[i];
@@ -495,13 +587,13 @@ static void signed_art_map(void) {
 
 void render_game(void) BANKED {
     static uint8_t page_tiles[2][360],page_attrs[2][360],page_valid[2];
-    uint8_t next_page=(LCDC_REG&LCDCF_BG9C00)?0:1,row,ui_only,show_ship;
+    uint8_t next_page=(LCDC_REG&LCDCF_BG9C00)?0:1,row,ui_only,show_ship,show_book;
     uint16_t i,offset;
     uint8_t *next_map=(uint8_t *)(next_page?0x9c00u:0x9800u);
 
     /* Build the next screen away from the visible tilemap. Dynamic glyphs
        have matching hidden copies, so changing one never tears the old view. */
-    pending_art_signed=0;render_tile_offset=next_page?64:0;
+    pending_art_signed=0;sprite_tiles_reserved=0;render_tile_offset=next_page?64:0;
     memset(bgtiles,0,360);memset(bgattrs,15,360);
     if(ui_mode!=PLAY)menus();
     else if(puzzle_id()!=255)puzzle();
@@ -532,17 +624,23 @@ void render_game(void) BANKED {
     VBK_REG=0;page_valid[next_page]=1;
     ui_only=ui_mode!=PLAY||puzzle_id()!=255||game.scene==NAME_SETUP||(game.scene==LAUNCH&&game.card>=2);
     show_ship=ui_mode==PLAY&&(game.scene==FLIGHT||game.scene==BEACON||game.scene==MOON_APPROACH||game.scene==MOON_WALK);
-    if(show_ship)sprite_position();
+    show_book=ui_mode==PLAY&&(game.scene==OWNER_LOG||game.scene==EMPTY_SEAT);
+    /* Keep VBlank from copying a partly rebuilt sprite list. The scanline
+       interrupt must stay active while the old illustration is visible. */
+    DISABLE_OAM_DMA;
+    for(row=0;row<40;row++)hide_sprite(row);
+    if(show_book)book_sprites();else if(show_ship)sprite_position();
 
     /* Commit palette, map and sprite visibility together during VBlank.
        The LCD is enabled once after boot, and stays enabled for all input. */
     if(LCDC_REG&LCDCF_ON)wait_vbl_done();
+    ENABLE_OAM_DMA;refresh_OAM();
     display_art_signed=pending_art_signed;visible_art=!ui_only;
     if(display_art_signed)LCDC_REG&=~LCDCF_BG8000;else LCDC_REG|=LCDCF_BG8000;
     if(ui_only)set_bkg_palette(0,8,ui_screen_palettes);
     else{set_bkg_palette(0,7,render_art_palettes);set_bkg_palette(7,1,ui_palette);}
     if(next_page)LCDC_REG|=LCDCF_BG9C00;else LCDC_REG&=~LCDCF_BG9C00;
-    if(show_ship)SHOW_SPRITES;else HIDE_SPRITES;
+    if(show_ship||show_book)SHOW_SPRITES;else HIDE_SPRITES;
     SHOW_BKG;
     if(!(LCDC_REG&LCDCF_ON))DISPLAY_ON;
 }

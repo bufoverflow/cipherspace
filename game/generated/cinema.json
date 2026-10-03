@@ -8,7 +8,7 @@
       "name": "PILOT",
       "bank": 7,
       "source": [
-        "hero-repair-cockpit.png",
+        "hero-repair-cockpit-v2.png",
         0
       ],
       "tileCount": 240,
@@ -17,8 +17,8 @@
       "paletteCount": 7,
       "colorsPerPalette": 4,
       "totalBytes": 4136,
-      "weightedError": 58.17298595,
-      "sha256": "404ac195f9b1013fc3d8d38e3c37eb9d4ec20579dbf6f94f53f9ad5e0b899dc2"
+      "weightedError": 60.01637589,
+      "sha256": "405841f07455273da5cb3d5569613b94206ee3d6af42ec86735dc862789fff12"
     },
     {
       "index": 1,
@@ -76,7 +76,7 @@
       "name": "HATCH_OPEN",
       "bank": 8,
       "source": [
-        "hero-repair-cockpit.png",
+        "hero-repair-cockpit-v2.png",
         1
       ],
       "tileCount": 240,
@@ -85,8 +85,8 @@
       "paletteCount": 7,
       "colorsPerPalette": 4,
       "totalBytes": 4136,
-      "weightedError": 70.37447107,
-      "sha256": "306e678eeaf5ace698f57bf6ef332230741a520f7caa384105551651da96c83f"
+      "weightedError": 72.79127874,
+      "sha256": "fd8d112b497d6b3849ffb16826a56345762c889207c720d0513bb1ed268630a4"
     },
     {
       "index": 5,
@@ -195,7 +195,7 @@
       "name": "MOON_NOTE",
       "bank": 10,
       "source": [
-        "hero-repair-cockpit.png",
+        "hero-repair-cockpit-v2.png",
         3
       ],
       "tileCount": 240,
@@ -204,15 +204,15 @@
       "paletteCount": 7,
       "colorsPerPalette": 4,
       "totalBytes": 4136,
-      "weightedError": 38.20730569,
-      "sha256": "cdbcb667c3e3da9f917664468e954e508b9781ea7bfd17cd5a811094577ada84"
+      "weightedError": 34.91435532,
+      "sha256": "ed5f2a8586be0fca913ff20e33f2e628647b4d5a83d5b2704c5f456ddeab406f"
     },
     {
       "index": 12,
       "name": "BOARDING",
       "bank": 11,
       "source": [
-        "hero-repair-cockpit.png",
+        "hero-repair-cockpit-v2.png",
         1
       ],
       "tileCount": 240,
@@ -221,15 +221,15 @@
       "paletteCount": 7,
       "colorsPerPalette": 4,
       "totalBytes": 4136,
-      "weightedError": 68.31464966,
-      "sha256": "8fe87f997fb19c0c77d1d1aef06700434a314543b47a3f6866b9b4489c93f268"
+      "weightedError": 67.9119461,
+      "sha256": "3c29b4c48e6497b4ebf3f277a622ddd5ab9a18165e6e870a049ab02935bb47ac"
     },
     {
       "index": 13,
       "name": "SEATED",
       "bank": 11,
       "source": [
-        "hero-repair-cockpit.png",
+        "hero-repair-cockpit-v2.png",
         3
       ],
       "tileCount": 240,
@@ -238,8 +238,8 @@
       "paletteCount": 7,
       "colorsPerPalette": 4,
       "totalBytes": 4136,
-      "weightedError": 58.56614835,
-      "sha256": "c1659f6016ffafe4cb95584187d53bf1a43a0bf39f26f488a95e76ff10b4c7b9"
+      "weightedError": 60.27264697,
+      "sha256": "291f8a0b90882d21ea6e28c8f172bc6286893345d15a7bd8bd2d3c29d4ffe4f5"
     },
     {
       "index": 14,
@@ -365,7 +365,7 @@
       "name": "ALIEN_CONFUSED",
       "bank": 14,
       "source": [
-        "meeting.png",
+        "meeting-v2.png",
         0
       ],
       "tileCount": 240,
@@ -374,15 +374,15 @@
       "paletteCount": 7,
       "colorsPerPalette": 4,
       "totalBytes": 4136,
-      "weightedError": 86.37961819,
-      "sha256": "5ee218dc50d7ccab7d16c84c5b102fe4f514a130623835f318da30c9db8bbb87"
+      "weightedError": 86.17519852,
+      "sha256": "6f3cdaadeda487c54a2ade97cf7a75f3b81da683208dc73418e23b82c3d261c6"
     },
     {
       "index": 22,
       "name": "ALIEN_CODE",
       "bank": 14,
       "source": [
-        "meeting.png",
+        "meeting-v2.png",
         1
       ],
       "tileCount": 240,
@@ -391,15 +391,15 @@
       "paletteCount": 7,
       "colorsPerPalette": 4,
       "totalBytes": 4136,
-      "weightedError": 77.41328261,
-      "sha256": "f18e8720967d0247bd3ee6526922d554128018360267554ed29ed981ae554a99"
+      "weightedError": 79.22649273,
+      "sha256": "742ccbb944c75b1e5c94e962822d8c5d1fe64f425767a4933b67126086e35698"
     },
     {
       "index": 23,
       "name": "ALIEN_HAPPY",
       "bank": 14,
       "source": [
-        "meeting.png",
+        "meeting-v2.png",
         2
       ],
       "tileCount": 240,
@@ -408,16 +408,35 @@
       "paletteCount": 7,
       "colorsPerPalette": 4,
       "totalBytes": 4136,
-      "weightedError": 87.0430011,
-      "sha256": "43df6ebdd0e1c1a079de4196666966c41d2530cd0d06f610dd4fe88789106d22"
+      "weightedError": 89.91682116,
+      "sha256": "6a79fdbb3b59197584146153535c4c70ece7de5a5c2b15b097b30fe7fb826ec8"
+    },
+    {
+      "index": 24,
+      "name": "FLIGHT",
+      "bank": 15,
+      "source": [
+        "flight.png",
+        null
+      ],
+      "tileCount": 240,
+      "tileBytes": 3840,
+      "attributeBytes": 240,
+      "paletteCount": 7,
+      "colorsPerPalette": 4,
+      "totalBytes": 4136,
+      "weightedError": 29.06877421,
+      "sha256": "7987d08eec0e19db23794d928f822e684b83a55c07a9603ee0bddbfc27d7ca4f"
     }
   ],
   "actorBytes": 208,
   "actorBank": 15,
+  "shipBytes": 72,
+  "shipBank": 15,
   "sourceHashes": [
     {
-      "file": "../design-assets/cinema/hero-repair-cockpit.png",
-      "sha256": "a6e4f17cdc5574b13d7f8d31170532b0aa296dc358efa6e0814b23c91845e6ad"
+      "file": "../design-assets/cinema/hero-repair-cockpit-v2.png",
+      "sha256": "9888aeb05087c36fa39b3d097deaebc4ab10a8e3115bce4183f784763fcf7045"
     },
     {
       "file": "../design-assets/cinema/hatch-repair.png",
@@ -436,16 +455,21 @@
       "sha256": "71cefd727535ed29c71d9a87f99a1eccbc57ae8f88f888dad2477dd71cbee13c"
     },
     {
-      "file": "../design-assets/cinema/meeting.png",
-      "sha256": "f39fe5b551159ec6a5e9547ec76cf7012b24d52c86f25a1794a2e9b3766ae14b"
+      "file": "../design-assets/cinema/meeting-v2.png",
+      "sha256": "ac0dc826acc43d428baa2d253e718c7112ae7f7bd39464464adeff85b76f7a85"
+    },
+    {
+      "file": "../design-assets/cinema/flight.png",
+      "sha256": "ca1cd492d424ea10c093a79782e0ff6058b99e18fd371f0d6d5a487ecca85409"
     }
   ],
   "overlays": {
     "pilotName": {
-      "x": 48,
-      "y": 72,
-      "w": 64,
-      "h": 8
+      "centerX": 80,
+      "y": 64,
+      "minWidth": 16,
+      "maxWidth": 56,
+      "h": 16
     },
     "doorNote": {
       "x": 32,
@@ -472,6 +496,11 @@
     "crystalSocket": {
       "x": 103,
       "y": 38
+    },
+    "flightMoon": {
+      "x": 128,
+      "y": 28,
+      "radius": 18
     },
     "southPoleTarget": {
       "x": 118,

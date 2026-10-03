@@ -4,17 +4,18 @@ A gentle cryptography adventure for Game Boy Color and the ModRetro Chromatic.
 
 ## Chapter 1: The Empty Ship
 
-Choose your pilot’s name, suit up, and discover a spacecraft in your backyard. Decode the note on its door, repair the ship, and follow its owner’s recorded message to the Moon’s south pole. Land, walk toward a signal, and meet an alien whose words you do not understand. Find a shared way to say hello through the ship’s symbol code.
+Choose your pilot’s name, suit up, and discover a spacecraft in your backyard. Decode the note on its door, repair the ship, and turn the pages of its owner's log book to learn why she needs a ride from the Moon's south pole. Land, walk toward a signal, and meet an alien whose words you do not understand. Find a shared way to say hello through the ship’s symbol code.
 
 - A named girl pilot, illustrated close-ups, and animated actions.
-- Button badges, a padded alphabet cursor, and linked cipher selections.
+- Round action buttons, a padded alphabet cursor, a compact suit patch, and linked cipher selections.
+- Slow scrolling instructions and an illustrated log book with pages the player turns.
 - Original OPEN, MOON, and HI substitution puzzles with free hints and undo.
 - A ten-second countdown, powered ascent, gentle steering, and a landing you control.
 - A fresh start for this redesign; new adventures save their own progress.
 
 ## Play or build
 
-Get [Chapter 1 v0.3.0](game/dist/cipherspace-chapter1-v0.3.0/) or its [ZIP](game/dist/cipherspace-chapter1-v0.3.0.zip). The package contains the ROM, controls, flashing guide, emulator screenshots, checksums, and test report. See the [development guide](game/README.md) for setup and learning references.
+Get [Chapter 1 v0.3.1](game/dist/cipherspace-chapter1-v0.3.1/) or its [ZIP](game/dist/cipherspace-chapter1-v0.3.1.zip). The package contains the ROM, controls, flashing guide, emulator screenshots, checksums, and test report. See the [development guide](game/README.md) for setup and learning references.
 
 ```sh
 make -C game

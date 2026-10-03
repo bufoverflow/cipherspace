@@ -1,0 +1,3514 @@
+{
+  "rom_sha256": "968900bc7ba670e5ec7ea172ca5ec384ce0c9a76e3b293f0b7d795944ea7f4d7",
+  "emulator": "PyBoy 2.7.0",
+  "checks_passed": 262,
+  "checks": [
+    "scene 0 reached",
+    "blank SRAM offers a new adventure",
+    "scene 12 reached",
+    "a new adventure starts with an empty player name",
+    "Left wraps from A to G within the first row",
+    "Right wraps from G to A",
+    "Up wraps from A to V",
+    "Down wraps from V to A",
+    "the short last row wraps from Z to V",
+    "the short last row wraps from V to Z",
+    "the G column skips missing cells below U",
+    "the G column wraps upward to U",
+    "all 26 alphabet cells are reachable without action cells",
+    "Start rejects an empty name without beginning the adventure",
+    "erasing an empty name is harmless",
+    "B erases the last letter",
+    "letters remain editable before Start",
+    "A is visibly round, with inset corners and a wider middle",
+    "B is visibly round, with inset corners and a wider middle",
+    "round A and B icons retain distinct letter shapes",
+    "scene 13 reached",
+    "Start confirms the chosen name before showing the pilot",
+    "four-letter pilot commits a complete visible screen",
+    "scene 1 reached",
+    "scene 14 reached",
+    "05-door-zoom cannot be skipped by an early A press",
+    "05-door-zoom stays visible long enough to observe",
+    "05-door-zoom contains visible animated movement",
+    "05-door-zoom waits for the player after the animation",
+    "scene 2 reached",
+    "06-reading-ticker begins with the first complete headline window",
+    "06-reading-ticker advances one character at a time through full windows, then restarts",
+    "06-reading-ticker holds its initial headline for about three seconds after entry",
+    "06-reading-ticker moves at about three quarters of a second per character",
+    "06-reading-ticker pauses on the final complete headline for at least three seconds",
+    "06-reading-ticker visibly renders every headline window",
+    "reading 06-reading-ticker never changes puzzle progress",
+    "Down moves the cipher focus without entering an answer",
+    "moving the cursor visibly changes the secret-symbol highlight",
+    "moving the cursor also changes its answer highlight",
+    "Up returns the cipher focus to the first pair",
+    "Select opens help",
+    "word help opens",
+    "the beacon definition remains available",
+    "word help explains the south pole before the landing",
+    "puzzle help opens",
+    "all three hint steps return without entering answers",
+    "an incorrect letter remains selected and shows immediate feedback",
+    "incorrect answers have explicit guidance",
+    "B undoes the incorrect attempt",
+    "O solves the first pair and moves focus",
+    "save contains 8 KiB SRAM",
+    "scene 0 reached",
+    "a v3 save retains the player name",
+    "scene 2 reached",
+    "a partial puzzle resumes at its next unfinished pair",
+    "an incorrect final pair does not open the hatch",
+    "undo restores the last blank",
+    "OPEN solves the hatch message",
+    "scene 15 reached",
+    "scene 15 reached",
+    "10-hatch-opening cannot be skipped by an early A press",
+    "10-hatch-opening shows exactly two complete hatch poses without torn frames",
+    "10-hatch-opening stays visible long enough to observe",
+    "10-hatch-opening contains visible animated movement",
+    "10-hatch-opening waits for the player after the animation",
+    "scene 3 reached",
+    "scene 16 reached",
+    "12-crystal-repair cannot be skipped by an early A press",
+    "12-crystal-repair stays visible long enough to observe",
+    "12-crystal-repair contains visible animated movement",
+    "scene 17 reached",
+    "replacing the crystal repairs the ship",
+    "scene 17 reached",
+    "13-ship-waking cannot be skipped by an early A press",
+    "13-ship-waking stays visible long enough to observe",
+    "13-ship-waking contains visible animated movement",
+    "13-ship-waking waits for the player after the animation",
+    "scene 4 reached",
+    "the first cockpit story beat ignores an immediate A press",
+    "the empty cockpit gives the player a second story beat",
+    "a rapid double tap cannot skip the second cockpit story beat",
+    "scene 18 reached",
+    "B on the first log-book page stays at the beginning",
+    "15a-moon-visit appears in story order",
+    "15a-moon-visit keeps the Moon, ship or alien face visible through every marker pulse",
+    "15a-moon-visit stays on screen for reading without an automatic timer",
+    "15-turn-forward-1 displays a turning corner before accepting a second input",
+    "15-turn-forward-1 ignores extra turn input while the page is moving",
+    "15-turn-forward-1 exposes an interactive page-turn interval",
+    "15-turn-forward-1 visibly animates through an intermediate page position",
+    "15-turn-forward-1 settles on one page and does not repeat from a held button",
+    "15b-ship-trouble appears in story order",
+    "15b-ship-trouble keeps the Moon, ship or alien face visible through every marker pulse",
+    "15b-ship-trouble stays on screen for reading without an automatic timer",
+    "15-turn-back displays a turning corner before accepting a second input",
+    "Start can pause a log-book page turn",
+    "pausing freezes the page turn without changing its destination",
+    "the paused page turn resumes normally",
+    "15-turn-back ignores extra turn input while the page is moving",
+    "15-turn-back exposes an interactive page-turn interval",
+    "15-turn-back visibly animates through an intermediate page position",
+    "15-turn-back settles on one page and does not repeat from a held button",
+    "15-return-to-middle displays a turning corner before accepting a second input",
+    "15-return-to-middle ignores extra turn input while the page is moving",
+    "15-return-to-middle exposes an interactive page-turn interval",
+    "15-return-to-middle visibly animates through an intermediate page position",
+    "15-return-to-middle settles on one page and does not repeat from a held button",
+    "15-turn-forward-2 displays a turning corner before accepting a second input",
+    "15-turn-forward-2 ignores extra turn input while the page is moving",
+    "15-turn-forward-2 exposes an interactive page-turn interval",
+    "15-turn-forward-2 visibly animates through an intermediate page position",
+    "15-turn-forward-2 settles on one page and does not repeat from a held button",
+    "15c-safe-pickup appears in story order",
+    "15c-safe-pickup keeps the Moon, ship or alien face visible through every marker pulse",
+    "15c-safe-pickup stays on screen for reading without an automatic timer",
+    "15-reread-middle displays a turning corner before accepting a second input",
+    "15-reread-middle ignores extra turn input while the page is moving",
+    "15-reread-middle exposes an interactive page-turn interval",
+    "15-reread-middle visibly animates through an intermediate page position",
+    "15-reread-middle settles on one page and does not repeat from a held button",
+    "15-return-to-last displays a turning corner before accepting a second input",
+    "15-return-to-last ignores extra turn input while the page is moving",
+    "15-return-to-last exposes an interactive page-turn interval",
+    "15-return-to-last visibly animates through an intermediate page position",
+    "15-return-to-last settles on one page and does not repeat from a held button",
+    "scene 19 reached",
+    "scene 19 reached",
+    "16-moon-zoom cannot be skipped by an early A press",
+    "16-moon-zoom stays visible long enough to observe",
+    "16-moon-zoom contains visible animated movement",
+    "16-moon-zoom waits for the player after the animation",
+    "scene 5 reached",
+    "one O mapping fills both circles in MOON",
+    "MOON uses the same symbol key as OPEN",
+    "scene 6 reached",
+    "the repaired ship waits for the player to board",
+    "scene 20 reached",
+    "18-boarding cannot be skipped by an early A press",
+    "18-boarding stays visible long enough to observe",
+    "18-boarding contains visible animated movement",
+    "scene 6 reached",
+    "boarding finishes at the lift-off prompt",
+    "lift off starts a full-screen countdown",
+    "save contains 8 KiB SRAM",
+    "scene 6 reached",
+    "a restart during countdown returns to the lift-off prompt",
+    "scene 6 reached",
+    "Lift off opens a dedicated countdown screen",
+    "launch shows every number from 10 to 1, then GO in order",
+    "repeated A presses cannot skip any countdown step",
+    "the numbered countdown lasts about ten seconds of emulated time",
+    "each countdown step visibly changes the center of the screen",
+    "scene 21 reached",
+    "scene 21 reached",
+    "19-powered-ascent cannot be skipped by an early A press",
+    "19-powered-ascent stays visible long enough to observe",
+    "19-powered-ascent contains visible animated movement",
+    "scene 7 reached",
+    "powered ascent plays before manual space flight begins",
+    "Right steers only horizontally",
+    "releasing the controls stops the ship",
+    "the left flight boundary holds",
+    "the lower flight boundary holds",
+    "Start pauses flight",
+    "paused flight ignores steering",
+    "the sound setting can be switched off",
+    "save contains 8 KiB SRAM",
+    "scene 7 reached",
+    "v3 saves retain position and sound",
+    "pause resumes with sound restored",
+    "scene 22 reached",
+    "the ship approaches before lining up to land",
+    "A cannot land before the ship is lined up",
+    "right steers toward the landing target",
+    "down steers toward the landing target",
+    "aligning above the safe lunar spot makes landing available",
+    "aligned landing waits for an A press",
+    "scene 23 reached",
+    "the pilot must walk closer before meeting the alien",
+    "Right moves the pilot across the lunar surface",
+    "approaching the alien makes first contact available",
+    "scene 24 reached",
+    "25-first-contact-motion leaves the story under player control",
+    "25-first-contact-motion remains visibly animated while waiting",
+    "the first greeting gives the alien a chance to respond",
+    "a second greeting leads the pilot to inspect the shared symbols",
+    "scene 25 reached",
+    "scene 9 reached",
+    "save contains 8 KiB SRAM",
+    "scene 9 reached",
+    "B cannot skip the first-contact HI message",
+    "an incorrect HI symbol stays editable",
+    "B undoes HI without leaving contact",
+    "HI encodes the greeting using the shared symbol key",
+    "scene 26 reached",
+    "scene 26 reached",
+    "29-friendship cannot be skipped by an early A press",
+    "29-friendship stays visible long enough to observe",
+    "29-friendship contains visible animated movement",
+    "29-friendship waits for the player after the animation",
+    "scene 11 reached",
+    "save contains 8 KiB SRAM",
+    "scene 11 reached",
+    "v3 saves retain the completed adventure",
+    "scene 0 reached",
+    "starting over requires deliberate confirmation",
+    "the new-adventure confirmation can be cancelled",
+    "new trip requires deliberate confirmation",
+    "short A+B hold does not erase the trip",
+    "scene 12 reached",
+    "save contains 8 KiB SRAM",
+    "editing a new name preserves the completed save",
+    "scene 11 reached",
+    "power loss before confirming a new name preserves the old v3 adventure",
+    "new trip requires deliberate confirmation",
+    "scene 12 reached",
+    "scene 13 reached",
+    "Start commits fresh named progress",
+    "save contains 8 KiB SRAM",
+    "scene 1 reached",
+    "restart during the pilot card resumes the durable backyard checkpoint",
+    "a ninth letter is rejected visibly",
+    "pressing A on a letter never finishes name setup",
+    "scene 13 reached",
+    "the longest name keeps its terminating NUL",
+    "eight-letter pilot commits a complete visible screen",
+    "save contains 8 KiB SRAM",
+    "scene 1 reached",
+    "all eight name letters survive a restart",
+    "scene 13 reached",
+    "one-letter pilot commits a complete visible screen",
+    "a one-letter name is accepted for the pilot introduction",
+    "one_to_four_letters visibly changes the suit name patch",
+    "one_to_four_letters fits inside the compact chest patch without changing the girl or captions",
+    "four_to_eight_letters visibly changes the suit name patch",
+    "four_to_eight_letters fits inside the compact chest patch without changing the girl or captions",
+    "normal play writes committed version-3 records",
+    "interrupted save falls back to the older v3 slot",
+    "bad CRC save falls back to the older v3 slot",
+    "two invalid records safely offer a new adventure",
+    "scene 12 reached",
+    "an invalid empty name leaves the older save available",
+    "an invalid empty name falls back to the intact slot",
+    "an invalid lowercase name leaves the older save available",
+    "an invalid lowercase name falls back to the intact slot",
+    "an invalid nonletter name leaves the older save available",
+    "an invalid nonletter name falls back to the intact slot",
+    "an invalid unterminated name leaves the older save available",
+    "an invalid unterminated name falls back to the intact slot",
+    "a valid v1 save starts a fresh v3 adventure",
+    "scene 12 reached",
+    "v1 progress does not carry into v3",
+    "save contains 8 KiB SRAM",
+    "unconfirmed setup does not rewrite older save bytes",
+    "a valid v2 save starts a fresh v3 adventure",
+    "scene 12 reached",
+    "v2 progress does not carry into v3",
+    "save contains 8 KiB SRAM",
+    "unconfirmed setup does not rewrite older save bytes",
+    "LCD stays enabled on every observed frame after boot",
+    "no blank frame appears during inputs, scenes, or animation"
+  ],
+  "frame_audit": {
+    "frames_observed": 10523,
+    "lcd_disabled_frames": 0,
+    "uniform_frames": 0,
+    "actions": {
+      "press a": 2861,
+      "press left": 24,
+      "press right": 1140,
+      "press up": 60,
+      "press down": 534,
+      "press start": 186,
+      "press b": 180,
+      "wait for visible four-letter pilot": 9,
+      "read 06-reading-ticker": 924,
+      "press select": 12,
+      "wait for scene 15": 49,
+      "read log-book page 1": 480,
+      "turn log book with a": 264,
+      "read log-book page 2": 480,
+      "turn log book with b": 81,
+      "read log-book page 3": 480,
+      "wait for scene 6": 67,
+      "press a repeatedly during countdown": 655,
+      "hold right": 182,
+      "hold left": 186,
+      "hold down": 166,
+      "hold up": 156,
+      "steer toward the Moon": 237,
+      "align with right": 121,
+      "align with down": 228,
+      "walk toward the alien": 289,
+      "observe 25-first-contact-motion": 120,
+      "wait for scene 26": 49,
+      "hold a+b to reset": 282,
+      "wait for visible eight-letter pilot": 20,
+      "wait for visible one-letter pilot": 1
+    }
+  },
+  "animation_audit": {
+    "05-door-zoom": {
+      "observed_frames": 97,
+      "distinct_scene_images": 2,
+      "sample_frames": 14,
+      "sample_interval_frames": 6,
+      "gif_frame_duration_ms": 100,
+      "native_gif": "05-door-zoom.gif",
+      "enlarged_gif": "05-door-zoom-3x.gif"
+    },
+    "10-hatch-opening": {
+      "observed_frames": 80,
+      "distinct_scene_images": 2,
+      "sample_frames": 11,
+      "sample_interval_frames": 6,
+      "gif_frame_duration_ms": 100,
+      "native_gif": "10-hatch-opening.gif",
+      "enlarged_gif": "10-hatch-opening-3x.gif",
+      "consecutive_frame_audit": {
+        "sample_interval_frames": 1,
+        "frames_observed": 62,
+        "distinct_scene_images": 2,
+        "poses": [
+          {
+            "first_elapsed_frame": 18,
+            "last_elapsed_frame": 42,
+            "frames_observed": 25,
+            "screenshot": "10-hatch-opening-consecutive-pose-1.png"
+          },
+          {
+            "first_elapsed_frame": 43,
+            "last_elapsed_frame": 79,
+            "frames_observed": 37,
+            "screenshot": "10-hatch-opening-consecutive-pose-2.png"
+          }
+        ]
+      }
+    },
+    "12-crystal-repair": {
+      "observed_frames": 69,
+      "distinct_scene_images": 5,
+      "sample_frames": 9,
+      "sample_interval_frames": 6,
+      "gif_frame_duration_ms": 100,
+      "native_gif": "12-crystal-repair.gif",
+      "enlarged_gif": "12-crystal-repair-3x.gif"
+    },
+    "13-ship-waking": {
+      "observed_frames": 168,
+      "distinct_scene_images": 6,
+      "sample_frames": 25,
+      "sample_interval_frames": 6,
+      "gif_frame_duration_ms": 100,
+      "native_gif": "13-ship-waking.gif",
+      "enlarged_gif": "13-ship-waking-3x.gif"
+    },
+    "15-turn-forward-1": {
+      "observed_frames": 60,
+      "distinct_page_corner_images": 4,
+      "page_corner_bounds": [
+        128,
+        72,
+        160,
+        96
+      ],
+      "turning_frames_observed": 37,
+      "sample_frames": 10,
+      "sample_interval_frames": 6,
+      "gif_frame_duration_ms": 100,
+      "native_gif": "15-turn-forward-1.gif",
+      "enlarged_gif": "15-turn-forward-1-3x.gif"
+    },
+    "15-turn-back": {
+      "observed_frames": 60,
+      "distinct_page_corner_images": 4,
+      "page_corner_bounds": [
+        0,
+        72,
+        32,
+        96
+      ],
+      "turning_frames_observed": 31,
+      "sample_frames": 10,
+      "sample_interval_frames": 6,
+      "gif_frame_duration_ms": 100,
+      "native_gif": "15-turn-back.gif",
+      "enlarged_gif": "15-turn-back-3x.gif"
+    },
+    "15-return-to-middle": {
+      "observed_frames": 60,
+      "distinct_page_corner_images": 5,
+      "page_corner_bounds": [
+        128,
+        72,
+        160,
+        96
+      ],
+      "turning_frames_observed": 37,
+      "sample_frames": 10,
+      "sample_interval_frames": 6,
+      "gif_frame_duration_ms": 100,
+      "native_gif": "15-return-to-middle.gif",
+      "enlarged_gif": "15-return-to-middle-3x.gif"
+    },
+    "15-turn-forward-2": {
+      "observed_frames": 60,
+      "distinct_page_corner_images": 4,
+      "page_corner_bounds": [
+        128,
+        72,
+        160,
+        96
+      ],
+      "turning_frames_observed": 33,
+      "sample_frames": 10,
+      "sample_interval_frames": 6,
+      "gif_frame_duration_ms": 100,
+      "native_gif": "15-turn-forward-2.gif",
+      "enlarged_gif": "15-turn-forward-2-3x.gif"
+    },
+    "15-reread-middle": {
+      "observed_frames": 60,
+      "distinct_page_corner_images": 4,
+      "page_corner_bounds": [
+        0,
+        72,
+        32,
+        96
+      ],
+      "turning_frames_observed": 33,
+      "sample_frames": 10,
+      "sample_interval_frames": 6,
+      "gif_frame_duration_ms": 100,
+      "native_gif": "15-reread-middle.gif",
+      "enlarged_gif": "15-reread-middle-3x.gif"
+    },
+    "15-return-to-last": {
+      "observed_frames": 60,
+      "distinct_page_corner_images": 4,
+      "page_corner_bounds": [
+        128,
+        72,
+        160,
+        96
+      ],
+      "turning_frames_observed": 33,
+      "sample_frames": 10,
+      "sample_interval_frames": 6,
+      "gif_frame_duration_ms": 100,
+      "native_gif": "15-return-to-last.gif",
+      "enlarged_gif": "15-return-to-last-3x.gif"
+    },
+    "16-moon-zoom": {
+      "observed_frames": 97,
+      "distinct_scene_images": 2,
+      "sample_frames": 14,
+      "sample_interval_frames": 6,
+      "gif_frame_duration_ms": 100,
+      "native_gif": "16-moon-zoom.gif",
+      "enlarged_gif": "16-moon-zoom-3x.gif"
+    },
+    "18-boarding": {
+      "observed_frames": 97,
+      "distinct_scene_images": 3,
+      "sample_frames": 14,
+      "sample_interval_frames": 6,
+      "gif_frame_duration_ms": 100,
+      "native_gif": "18-boarding.gif",
+      "enlarged_gif": "18-boarding-3x.gif"
+    },
+    "countdown": {
+      "values": [
+        10,
+        9,
+        8,
+        7,
+        6,
+        5,
+        4,
+        3,
+        2,
+        1,
+        0
+      ],
+      "frames_per_value": {
+        "10": 49,
+        "9": 60,
+        "8": 60,
+        "7": 60,
+        "6": 60,
+        "5": 60,
+        "4": 60,
+        "3": 60,
+        "2": 60,
+        "1": 60,
+        "0": 60
+      }
+    },
+    "19-powered-ascent": {
+      "observed_frames": 462,
+      "distinct_scene_images": 47,
+      "sample_frames": 74,
+      "sample_interval_frames": 6,
+      "gif_frame_duration_ms": 100,
+      "native_gif": "19-powered-ascent.gif",
+      "enlarged_gif": "19-powered-ascent-3x.gif"
+    },
+    "25-first-contact-motion": {
+      "observed_frames": 120,
+      "distinct_scene_images": 2,
+      "sample_frames": 20,
+      "sample_interval_frames": 6,
+      "gif_frame_duration_ms": 100,
+      "native_gif": "25-first-contact-motion.gif",
+      "enlarged_gif": "25-first-contact-motion-3x.gif"
+    },
+    "29-friendship": {
+      "observed_frames": 108,
+      "distinct_scene_images": 4,
+      "sample_frames": 15,
+      "sample_interval_frames": 6,
+      "gif_frame_duration_ms": 100,
+      "native_gif": "29-friendship.gif",
+      "enlarged_gif": "29-friendship-3x.gif"
+    }
+  },
+  "reading_audit": {
+    "06-reading-ticker": {
+      "offsets": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        0
+      ],
+      "frames_per_window": {
+        "0": 156,
+        "1": 48,
+        "2": 40,
+        "3": 48,
+        "4": 40,
+        "5": 48,
+        "6": 48,
+        "7": 40,
+        "8": 48,
+        "9": 48,
+        "10": 40,
+        "11": 48,
+        "12": 40,
+        "13": 232
+      }
+    },
+    "15a-moon-visit": {
+      "neutral_reading_frames": 480,
+      "player_turns_pages": true
+    },
+    "15-turn-forward-1": {
+      "turn_trace": [
+        {
+          "elapsed_frame": 0,
+          "emulator_frame": 1531,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 1,
+          "emulator_frame": 1532,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 2,
+          "emulator_frame": 1533,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 3,
+          "emulator_frame": 1534,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 4,
+          "emulator_frame": 1535,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 5,
+          "emulator_frame": 1536,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 6,
+          "emulator_frame": 1537,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 7,
+          "emulator_frame": 1538,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 8,
+          "emulator_frame": 1539,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 9,
+          "emulator_frame": 1540,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 10,
+          "emulator_frame": 1541,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 11,
+          "emulator_frame": 1542,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 12,
+          "emulator_frame": 1543,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 13,
+          "emulator_frame": 1544,
+          "book_turn": 23,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 1
+        },
+        {
+          "elapsed_frame": 14,
+          "emulator_frame": 1545,
+          "book_turn": 22,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 2
+        },
+        {
+          "elapsed_frame": 15,
+          "emulator_frame": 1546,
+          "book_turn": 21,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 3
+        },
+        {
+          "elapsed_frame": 16,
+          "emulator_frame": 1547,
+          "book_turn": 20,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 4
+        },
+        {
+          "elapsed_frame": 17,
+          "emulator_frame": 1548,
+          "book_turn": 19,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 5
+        },
+        {
+          "elapsed_frame": 18,
+          "emulator_frame": 1549,
+          "book_turn": 18,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 6
+        },
+        {
+          "elapsed_frame": 19,
+          "emulator_frame": 1550,
+          "book_turn": 17,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 7
+        },
+        {
+          "elapsed_frame": 20,
+          "emulator_frame": 1551,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 21,
+          "emulator_frame": 1552,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 22,
+          "emulator_frame": 1553,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 23,
+          "emulator_frame": 1554,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 24,
+          "emulator_frame": 1555,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 25,
+          "emulator_frame": 1556,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 26,
+          "emulator_frame": 1557,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 27,
+          "emulator_frame": 1558,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 28,
+          "emulator_frame": 1559,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 29,
+          "emulator_frame": 1560,
+          "book_turn": 7,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 30,
+          "emulator_frame": 1561,
+          "book_turn": 7,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 31,
+          "emulator_frame": 1562,
+          "book_turn": 7,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 32,
+          "emulator_frame": 1563,
+          "book_turn": 7,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 33,
+          "emulator_frame": 1564,
+          "book_turn": 7,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 34,
+          "emulator_frame": 1565,
+          "book_turn": 7,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 35,
+          "emulator_frame": 1566,
+          "book_turn": 7,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 36,
+          "emulator_frame": 1567,
+          "book_turn": 7,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 37,
+          "emulator_frame": 1568,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 25
+        },
+        {
+          "elapsed_frame": 38,
+          "emulator_frame": 1569,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 25
+        },
+        {
+          "elapsed_frame": 39,
+          "emulator_frame": 1570,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 25
+        },
+        {
+          "elapsed_frame": 40,
+          "emulator_frame": 1571,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 25
+        },
+        {
+          "elapsed_frame": 41,
+          "emulator_frame": 1572,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 29
+        },
+        {
+          "elapsed_frame": 42,
+          "emulator_frame": 1573,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 30
+        },
+        {
+          "elapsed_frame": 43,
+          "emulator_frame": 1574,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 31
+        },
+        {
+          "elapsed_frame": 44,
+          "emulator_frame": 1575,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 32
+        },
+        {
+          "elapsed_frame": 45,
+          "emulator_frame": 1576,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 32
+        },
+        {
+          "elapsed_frame": 46,
+          "emulator_frame": 1577,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 32
+        },
+        {
+          "elapsed_frame": 47,
+          "emulator_frame": 1578,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 32
+        },
+        {
+          "elapsed_frame": 48,
+          "emulator_frame": 1579,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 36
+        },
+        {
+          "elapsed_frame": 49,
+          "emulator_frame": 1580,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 37
+        },
+        {
+          "elapsed_frame": 50,
+          "emulator_frame": 1581,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 38
+        },
+        {
+          "elapsed_frame": 51,
+          "emulator_frame": 1582,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 39
+        },
+        {
+          "elapsed_frame": 52,
+          "emulator_frame": 1583,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 40
+        },
+        {
+          "elapsed_frame": 53,
+          "emulator_frame": 1584,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 40
+        },
+        {
+          "elapsed_frame": 54,
+          "emulator_frame": 1585,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 40
+        },
+        {
+          "elapsed_frame": 55,
+          "emulator_frame": 1586,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 40
+        },
+        {
+          "elapsed_frame": 56,
+          "emulator_frame": 1587,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 44
+        },
+        {
+          "elapsed_frame": 57,
+          "emulator_frame": 1588,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 45
+        },
+        {
+          "elapsed_frame": 58,
+          "emulator_frame": 1589,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 46
+        },
+        {
+          "elapsed_frame": 59,
+          "emulator_frame": 1590,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 47
+        }
+      ]
+    },
+    "15b-ship-trouble": {
+      "neutral_reading_frames": 480,
+      "player_turns_pages": true
+    },
+    "15-turn-back": {
+      "turn_trace": [
+        {
+          "elapsed_frame": 0,
+          "emulator_frame": 2077,
+          "book_turn": 24,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 1,
+          "emulator_frame": 2078,
+          "book_turn": 24,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 2,
+          "emulator_frame": 2079,
+          "book_turn": 24,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 3,
+          "emulator_frame": 2080,
+          "book_turn": 24,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 4,
+          "emulator_frame": 2081,
+          "book_turn": 24,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 5,
+          "emulator_frame": 2082,
+          "book_turn": 24,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 6,
+          "emulator_frame": 2083,
+          "book_turn": 24,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 7,
+          "emulator_frame": 2084,
+          "book_turn": 24,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 8,
+          "emulator_frame": 2085,
+          "book_turn": 24,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 9,
+          "emulator_frame": 2086,
+          "book_turn": 24,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 10,
+          "emulator_frame": 2087,
+          "book_turn": 24,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 11,
+          "emulator_frame": 2088,
+          "book_turn": 24,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 12,
+          "emulator_frame": 2089,
+          "book_turn": 24,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 13,
+          "emulator_frame": 2090,
+          "book_turn": 24,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 14,
+          "emulator_frame": 2091,
+          "book_turn": 23,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 1
+        },
+        {
+          "after_start_press": true,
+          "emulator_frame": 2103,
+          "book_turn": 23,
+          "card": 0,
+          "ui_mode": 4
+        },
+        {
+          "elapsed_frame": 15,
+          "emulator_frame": 2206,
+          "book_turn": 13,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 11
+        },
+        {
+          "elapsed_frame": 16,
+          "emulator_frame": 2207,
+          "book_turn": 13,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 11
+        },
+        {
+          "elapsed_frame": 17,
+          "emulator_frame": 2208,
+          "book_turn": 13,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 11
+        },
+        {
+          "elapsed_frame": 18,
+          "emulator_frame": 2209,
+          "book_turn": 13,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 11
+        },
+        {
+          "elapsed_frame": 19,
+          "emulator_frame": 2210,
+          "book_turn": 13,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 11
+        },
+        {
+          "elapsed_frame": 20,
+          "emulator_frame": 2211,
+          "book_turn": 13,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 11
+        },
+        {
+          "elapsed_frame": 21,
+          "emulator_frame": 2212,
+          "book_turn": 13,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 11
+        },
+        {
+          "elapsed_frame": 22,
+          "emulator_frame": 2213,
+          "book_turn": 3,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 21
+        },
+        {
+          "elapsed_frame": 23,
+          "emulator_frame": 2214,
+          "book_turn": 3,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 21
+        },
+        {
+          "elapsed_frame": 24,
+          "emulator_frame": 2215,
+          "book_turn": 3,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 21
+        },
+        {
+          "elapsed_frame": 25,
+          "emulator_frame": 2216,
+          "book_turn": 3,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 21
+        },
+        {
+          "elapsed_frame": 26,
+          "emulator_frame": 2217,
+          "book_turn": 3,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 21
+        },
+        {
+          "elapsed_frame": 27,
+          "emulator_frame": 2218,
+          "book_turn": 3,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 21
+        },
+        {
+          "elapsed_frame": 28,
+          "emulator_frame": 2219,
+          "book_turn": 3,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 21
+        },
+        {
+          "elapsed_frame": 29,
+          "emulator_frame": 2220,
+          "book_turn": 3,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 21
+        },
+        {
+          "elapsed_frame": 30,
+          "emulator_frame": 2221,
+          "book_turn": 3,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 21
+        },
+        {
+          "elapsed_frame": 31,
+          "emulator_frame": 2222,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 30
+        },
+        {
+          "elapsed_frame": 32,
+          "emulator_frame": 2223,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 30
+        },
+        {
+          "elapsed_frame": 33,
+          "emulator_frame": 2224,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 30
+        },
+        {
+          "elapsed_frame": 34,
+          "emulator_frame": 2225,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 30
+        },
+        {
+          "elapsed_frame": 35,
+          "emulator_frame": 2226,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 30
+        },
+        {
+          "elapsed_frame": 36,
+          "emulator_frame": 2227,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 35
+        },
+        {
+          "elapsed_frame": 37,
+          "emulator_frame": 2228,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 35
+        },
+        {
+          "elapsed_frame": 38,
+          "emulator_frame": 2229,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 35
+        },
+        {
+          "elapsed_frame": 39,
+          "emulator_frame": 2230,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 35
+        },
+        {
+          "elapsed_frame": 40,
+          "emulator_frame": 2231,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 35
+        },
+        {
+          "elapsed_frame": 41,
+          "emulator_frame": 2232,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 40
+        },
+        {
+          "elapsed_frame": 42,
+          "emulator_frame": 2233,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 40
+        },
+        {
+          "elapsed_frame": 43,
+          "emulator_frame": 2234,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 40
+        },
+        {
+          "elapsed_frame": 44,
+          "emulator_frame": 2235,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 40
+        },
+        {
+          "elapsed_frame": 45,
+          "emulator_frame": 2236,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 40
+        },
+        {
+          "elapsed_frame": 46,
+          "emulator_frame": 2237,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 45
+        },
+        {
+          "elapsed_frame": 47,
+          "emulator_frame": 2238,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 46
+        },
+        {
+          "elapsed_frame": 48,
+          "emulator_frame": 2239,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 47
+        },
+        {
+          "elapsed_frame": 49,
+          "emulator_frame": 2240,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 48
+        },
+        {
+          "elapsed_frame": 50,
+          "emulator_frame": 2241,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 48
+        },
+        {
+          "elapsed_frame": 51,
+          "emulator_frame": 2242,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 48
+        },
+        {
+          "elapsed_frame": 52,
+          "emulator_frame": 2243,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 48
+        },
+        {
+          "elapsed_frame": 53,
+          "emulator_frame": 2244,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 48
+        },
+        {
+          "elapsed_frame": 54,
+          "emulator_frame": 2245,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 53
+        },
+        {
+          "elapsed_frame": 55,
+          "emulator_frame": 2246,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 54
+        },
+        {
+          "elapsed_frame": 56,
+          "emulator_frame": 2247,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 55
+        },
+        {
+          "elapsed_frame": 57,
+          "emulator_frame": 2248,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 56
+        },
+        {
+          "elapsed_frame": 58,
+          "emulator_frame": 2249,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 56
+        },
+        {
+          "elapsed_frame": 59,
+          "emulator_frame": 2250,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 56
+        }
+      ]
+    },
+    "15-return-to-middle": {
+      "turn_trace": [
+        {
+          "elapsed_frame": 0,
+          "emulator_frame": 2257,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 64
+        },
+        {
+          "elapsed_frame": 1,
+          "emulator_frame": 2258,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 64
+        },
+        {
+          "elapsed_frame": 2,
+          "emulator_frame": 2259,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 64
+        },
+        {
+          "elapsed_frame": 3,
+          "emulator_frame": 2260,
+          "book_turn": 0,
+          "card": 0,
+          "ui_mode": 0,
+          "scene_ticks": 64
+        },
+        {
+          "elapsed_frame": 4,
+          "emulator_frame": 2261,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 5,
+          "emulator_frame": 2262,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 6,
+          "emulator_frame": 2263,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 7,
+          "emulator_frame": 2264,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 8,
+          "emulator_frame": 2265,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 9,
+          "emulator_frame": 2266,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 10,
+          "emulator_frame": 2267,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 11,
+          "emulator_frame": 2268,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 12,
+          "emulator_frame": 2269,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 13,
+          "emulator_frame": 2270,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 14,
+          "emulator_frame": 2271,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 15,
+          "emulator_frame": 2272,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 16,
+          "emulator_frame": 2273,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 17,
+          "emulator_frame": 2274,
+          "book_turn": 23,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 1
+        },
+        {
+          "elapsed_frame": 18,
+          "emulator_frame": 2275,
+          "book_turn": 22,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 2
+        },
+        {
+          "elapsed_frame": 19,
+          "emulator_frame": 2276,
+          "book_turn": 21,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 3
+        },
+        {
+          "elapsed_frame": 20,
+          "emulator_frame": 2277,
+          "book_turn": 20,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 4
+        },
+        {
+          "elapsed_frame": 21,
+          "emulator_frame": 2278,
+          "book_turn": 19,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 5
+        },
+        {
+          "elapsed_frame": 22,
+          "emulator_frame": 2279,
+          "book_turn": 18,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 6
+        },
+        {
+          "elapsed_frame": 23,
+          "emulator_frame": 2280,
+          "book_turn": 17,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 7
+        },
+        {
+          "elapsed_frame": 24,
+          "emulator_frame": 2281,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 25,
+          "emulator_frame": 2282,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 26,
+          "emulator_frame": 2283,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 27,
+          "emulator_frame": 2284,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 28,
+          "emulator_frame": 2285,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 29,
+          "emulator_frame": 2286,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 30,
+          "emulator_frame": 2287,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 31,
+          "emulator_frame": 2288,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 32,
+          "emulator_frame": 2289,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 33,
+          "emulator_frame": 2290,
+          "book_turn": 7,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 34,
+          "emulator_frame": 2291,
+          "book_turn": 7,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 35,
+          "emulator_frame": 2292,
+          "book_turn": 7,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 36,
+          "emulator_frame": 2293,
+          "book_turn": 7,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 37,
+          "emulator_frame": 2294,
+          "book_turn": 7,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 38,
+          "emulator_frame": 2295,
+          "book_turn": 7,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 39,
+          "emulator_frame": 2296,
+          "book_turn": 7,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 40,
+          "emulator_frame": 2297,
+          "book_turn": 7,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 41,
+          "emulator_frame": 2298,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 25
+        },
+        {
+          "elapsed_frame": 42,
+          "emulator_frame": 2299,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 25
+        },
+        {
+          "elapsed_frame": 43,
+          "emulator_frame": 2300,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 25
+        },
+        {
+          "elapsed_frame": 44,
+          "emulator_frame": 2301,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 25
+        },
+        {
+          "elapsed_frame": 45,
+          "emulator_frame": 2302,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 29
+        },
+        {
+          "elapsed_frame": 46,
+          "emulator_frame": 2303,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 30
+        },
+        {
+          "elapsed_frame": 47,
+          "emulator_frame": 2304,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 31
+        },
+        {
+          "elapsed_frame": 48,
+          "emulator_frame": 2305,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 32
+        },
+        {
+          "elapsed_frame": 49,
+          "emulator_frame": 2306,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 32
+        },
+        {
+          "elapsed_frame": 50,
+          "emulator_frame": 2307,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 32
+        },
+        {
+          "elapsed_frame": 51,
+          "emulator_frame": 2308,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 32
+        },
+        {
+          "elapsed_frame": 52,
+          "emulator_frame": 2309,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 36
+        },
+        {
+          "elapsed_frame": 53,
+          "emulator_frame": 2310,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 37
+        },
+        {
+          "elapsed_frame": 54,
+          "emulator_frame": 2311,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 38
+        },
+        {
+          "elapsed_frame": 55,
+          "emulator_frame": 2312,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 39
+        },
+        {
+          "elapsed_frame": 56,
+          "emulator_frame": 2313,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 40
+        },
+        {
+          "elapsed_frame": 57,
+          "emulator_frame": 2314,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 40
+        },
+        {
+          "elapsed_frame": 58,
+          "emulator_frame": 2315,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 40
+        },
+        {
+          "elapsed_frame": 59,
+          "emulator_frame": 2316,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 40
+        }
+      ]
+    },
+    "15-turn-forward-2": {
+      "turn_trace": [
+        {
+          "elapsed_frame": 0,
+          "emulator_frame": 2323,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 48
+        },
+        {
+          "elapsed_frame": 1,
+          "emulator_frame": 2324,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 48
+        },
+        {
+          "elapsed_frame": 2,
+          "emulator_frame": 2325,
+          "book_turn": 24,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 3,
+          "emulator_frame": 2326,
+          "book_turn": 24,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 4,
+          "emulator_frame": 2327,
+          "book_turn": 24,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 5,
+          "emulator_frame": 2328,
+          "book_turn": 24,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 6,
+          "emulator_frame": 2329,
+          "book_turn": 24,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 7,
+          "emulator_frame": 2330,
+          "book_turn": 24,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 8,
+          "emulator_frame": 2331,
+          "book_turn": 24,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 9,
+          "emulator_frame": 2332,
+          "book_turn": 24,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 10,
+          "emulator_frame": 2333,
+          "book_turn": 24,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 11,
+          "emulator_frame": 2334,
+          "book_turn": 23,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 1
+        },
+        {
+          "elapsed_frame": 12,
+          "emulator_frame": 2335,
+          "book_turn": 22,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 2
+        },
+        {
+          "elapsed_frame": 13,
+          "emulator_frame": 2336,
+          "book_turn": 21,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 3
+        },
+        {
+          "elapsed_frame": 14,
+          "emulator_frame": 2337,
+          "book_turn": 20,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 4
+        },
+        {
+          "elapsed_frame": 15,
+          "emulator_frame": 2338,
+          "book_turn": 19,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 5
+        },
+        {
+          "elapsed_frame": 16,
+          "emulator_frame": 2339,
+          "book_turn": 18,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 6
+        },
+        {
+          "elapsed_frame": 17,
+          "emulator_frame": 2340,
+          "book_turn": 17,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 7
+        },
+        {
+          "elapsed_frame": 18,
+          "emulator_frame": 2341,
+          "book_turn": 16,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 19,
+          "emulator_frame": 2342,
+          "book_turn": 16,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 20,
+          "emulator_frame": 2343,
+          "book_turn": 16,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 21,
+          "emulator_frame": 2344,
+          "book_turn": 16,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 22,
+          "emulator_frame": 2345,
+          "book_turn": 16,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 23,
+          "emulator_frame": 2346,
+          "book_turn": 16,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 24,
+          "emulator_frame": 2347,
+          "book_turn": 16,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 25,
+          "emulator_frame": 2348,
+          "book_turn": 16,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 26,
+          "emulator_frame": 2349,
+          "book_turn": 16,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 27,
+          "emulator_frame": 2350,
+          "book_turn": 7,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 28,
+          "emulator_frame": 2351,
+          "book_turn": 7,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 29,
+          "emulator_frame": 2352,
+          "book_turn": 7,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 30,
+          "emulator_frame": 2353,
+          "book_turn": 7,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 31,
+          "emulator_frame": 2354,
+          "book_turn": 7,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 32,
+          "emulator_frame": 2355,
+          "book_turn": 7,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 33,
+          "emulator_frame": 2356,
+          "book_turn": 7,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 34,
+          "emulator_frame": 2357,
+          "book_turn": 7,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 35,
+          "emulator_frame": 2358,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 25
+        },
+        {
+          "elapsed_frame": 36,
+          "emulator_frame": 2359,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 25
+        },
+        {
+          "elapsed_frame": 37,
+          "emulator_frame": 2360,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 25
+        },
+        {
+          "elapsed_frame": 38,
+          "emulator_frame": 2361,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 25
+        },
+        {
+          "elapsed_frame": 39,
+          "emulator_frame": 2362,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 29
+        },
+        {
+          "elapsed_frame": 40,
+          "emulator_frame": 2363,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 30
+        },
+        {
+          "elapsed_frame": 41,
+          "emulator_frame": 2364,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 31
+        },
+        {
+          "elapsed_frame": 42,
+          "emulator_frame": 2365,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 32
+        },
+        {
+          "elapsed_frame": 43,
+          "emulator_frame": 2366,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 32
+        },
+        {
+          "elapsed_frame": 44,
+          "emulator_frame": 2367,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 32
+        },
+        {
+          "elapsed_frame": 45,
+          "emulator_frame": 2368,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 32
+        },
+        {
+          "elapsed_frame": 46,
+          "emulator_frame": 2369,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 36
+        },
+        {
+          "elapsed_frame": 47,
+          "emulator_frame": 2370,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 37
+        },
+        {
+          "elapsed_frame": 48,
+          "emulator_frame": 2371,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 38
+        },
+        {
+          "elapsed_frame": 49,
+          "emulator_frame": 2372,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 39
+        },
+        {
+          "elapsed_frame": 50,
+          "emulator_frame": 2373,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 40
+        },
+        {
+          "elapsed_frame": 51,
+          "emulator_frame": 2374,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 40
+        },
+        {
+          "elapsed_frame": 52,
+          "emulator_frame": 2375,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 40
+        },
+        {
+          "elapsed_frame": 53,
+          "emulator_frame": 2376,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 40
+        },
+        {
+          "elapsed_frame": 54,
+          "emulator_frame": 2377,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 44
+        },
+        {
+          "elapsed_frame": 55,
+          "emulator_frame": 2378,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 45
+        },
+        {
+          "elapsed_frame": 56,
+          "emulator_frame": 2379,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 46
+        },
+        {
+          "elapsed_frame": 57,
+          "emulator_frame": 2380,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 47
+        },
+        {
+          "elapsed_frame": 58,
+          "emulator_frame": 2381,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 48
+        },
+        {
+          "elapsed_frame": 59,
+          "emulator_frame": 2382,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 48
+        }
+      ]
+    },
+    "15c-safe-pickup": {
+      "neutral_reading_frames": 480,
+      "player_turns_pages": true
+    },
+    "15-reread-middle": {
+      "turn_trace": [
+        {
+          "elapsed_frame": 0,
+          "emulator_frame": 2869,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 1,
+          "emulator_frame": 2870,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 2,
+          "emulator_frame": 2871,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 3,
+          "emulator_frame": 2872,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 4,
+          "emulator_frame": 2873,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 5,
+          "emulator_frame": 2874,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 6,
+          "emulator_frame": 2875,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 7,
+          "emulator_frame": 2876,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 8,
+          "emulator_frame": 2877,
+          "book_turn": 24,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 9,
+          "emulator_frame": 2878,
+          "book_turn": 23,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 1
+        },
+        {
+          "elapsed_frame": 10,
+          "emulator_frame": 2879,
+          "book_turn": 22,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 2
+        },
+        {
+          "elapsed_frame": 11,
+          "emulator_frame": 2880,
+          "book_turn": 21,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 3
+        },
+        {
+          "elapsed_frame": 12,
+          "emulator_frame": 2881,
+          "book_turn": 20,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 4
+        },
+        {
+          "elapsed_frame": 13,
+          "emulator_frame": 2882,
+          "book_turn": 19,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 5
+        },
+        {
+          "elapsed_frame": 14,
+          "emulator_frame": 2883,
+          "book_turn": 18,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 6
+        },
+        {
+          "elapsed_frame": 15,
+          "emulator_frame": 2884,
+          "book_turn": 17,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 7
+        },
+        {
+          "elapsed_frame": 16,
+          "emulator_frame": 2885,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 17,
+          "emulator_frame": 2886,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 18,
+          "emulator_frame": 2887,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 19,
+          "emulator_frame": 2888,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 20,
+          "emulator_frame": 2889,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 21,
+          "emulator_frame": 2890,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 22,
+          "emulator_frame": 2891,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 23,
+          "emulator_frame": 2892,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 24,
+          "emulator_frame": 2893,
+          "book_turn": 16,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 25,
+          "emulator_frame": 2894,
+          "book_turn": 7,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 26,
+          "emulator_frame": 2895,
+          "book_turn": 7,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 27,
+          "emulator_frame": 2896,
+          "book_turn": 7,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 28,
+          "emulator_frame": 2897,
+          "book_turn": 7,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 29,
+          "emulator_frame": 2898,
+          "book_turn": 7,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 30,
+          "emulator_frame": 2899,
+          "book_turn": 7,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 31,
+          "emulator_frame": 2900,
+          "book_turn": 7,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 32,
+          "emulator_frame": 2901,
+          "book_turn": 7,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 33,
+          "emulator_frame": 2902,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 25
+        },
+        {
+          "elapsed_frame": 34,
+          "emulator_frame": 2903,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 25
+        },
+        {
+          "elapsed_frame": 35,
+          "emulator_frame": 2904,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 25
+        },
+        {
+          "elapsed_frame": 36,
+          "emulator_frame": 2905,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 25
+        },
+        {
+          "elapsed_frame": 37,
+          "emulator_frame": 2906,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 29
+        },
+        {
+          "elapsed_frame": 38,
+          "emulator_frame": 2907,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 30
+        },
+        {
+          "elapsed_frame": 39,
+          "emulator_frame": 2908,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 31
+        },
+        {
+          "elapsed_frame": 40,
+          "emulator_frame": 2909,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 32
+        },
+        {
+          "elapsed_frame": 41,
+          "emulator_frame": 2910,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 32
+        },
+        {
+          "elapsed_frame": 42,
+          "emulator_frame": 2911,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 32
+        },
+        {
+          "elapsed_frame": 43,
+          "emulator_frame": 2912,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 32
+        },
+        {
+          "elapsed_frame": 44,
+          "emulator_frame": 2913,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 36
+        },
+        {
+          "elapsed_frame": 45,
+          "emulator_frame": 2914,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 37
+        },
+        {
+          "elapsed_frame": 46,
+          "emulator_frame": 2915,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 38
+        },
+        {
+          "elapsed_frame": 47,
+          "emulator_frame": 2916,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 39
+        },
+        {
+          "elapsed_frame": 48,
+          "emulator_frame": 2917,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 40
+        },
+        {
+          "elapsed_frame": 49,
+          "emulator_frame": 2918,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 40
+        },
+        {
+          "elapsed_frame": 50,
+          "emulator_frame": 2919,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 40
+        },
+        {
+          "elapsed_frame": 51,
+          "emulator_frame": 2920,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 40
+        },
+        {
+          "elapsed_frame": 52,
+          "emulator_frame": 2921,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 44
+        },
+        {
+          "elapsed_frame": 53,
+          "emulator_frame": 2922,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 45
+        },
+        {
+          "elapsed_frame": 54,
+          "emulator_frame": 2923,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 46
+        },
+        {
+          "elapsed_frame": 55,
+          "emulator_frame": 2924,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 47
+        },
+        {
+          "elapsed_frame": 56,
+          "emulator_frame": 2925,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 48
+        },
+        {
+          "elapsed_frame": 57,
+          "emulator_frame": 2926,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 48
+        },
+        {
+          "elapsed_frame": 58,
+          "emulator_frame": 2927,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 48
+        },
+        {
+          "elapsed_frame": 59,
+          "emulator_frame": 2928,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 48
+        }
+      ]
+    },
+    "15-return-to-last": {
+      "turn_trace": [
+        {
+          "elapsed_frame": 0,
+          "emulator_frame": 2935,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 56
+        },
+        {
+          "elapsed_frame": 1,
+          "emulator_frame": 2936,
+          "book_turn": 0,
+          "card": 1,
+          "ui_mode": 0,
+          "scene_ticks": 56
+        },
+        {
+          "elapsed_frame": 2,
+          "emulator_frame": 2937,
+          "book_turn": 24,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 3,
+          "emulator_frame": 2938,
+          "book_turn": 24,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 4,
+          "emulator_frame": 2939,
+          "book_turn": 24,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 5,
+          "emulator_frame": 2940,
+          "book_turn": 24,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 6,
+          "emulator_frame": 2941,
+          "book_turn": 24,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 7,
+          "emulator_frame": 2942,
+          "book_turn": 24,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 8,
+          "emulator_frame": 2943,
+          "book_turn": 24,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 9,
+          "emulator_frame": 2944,
+          "book_turn": 24,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 10,
+          "emulator_frame": 2945,
+          "book_turn": 24,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 0
+        },
+        {
+          "elapsed_frame": 11,
+          "emulator_frame": 2946,
+          "book_turn": 23,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 1
+        },
+        {
+          "elapsed_frame": 12,
+          "emulator_frame": 2947,
+          "book_turn": 22,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 2
+        },
+        {
+          "elapsed_frame": 13,
+          "emulator_frame": 2948,
+          "book_turn": 21,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 3
+        },
+        {
+          "elapsed_frame": 14,
+          "emulator_frame": 2949,
+          "book_turn": 20,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 4
+        },
+        {
+          "elapsed_frame": 15,
+          "emulator_frame": 2950,
+          "book_turn": 19,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 5
+        },
+        {
+          "elapsed_frame": 16,
+          "emulator_frame": 2951,
+          "book_turn": 18,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 6
+        },
+        {
+          "elapsed_frame": 17,
+          "emulator_frame": 2952,
+          "book_turn": 17,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 7
+        },
+        {
+          "elapsed_frame": 18,
+          "emulator_frame": 2953,
+          "book_turn": 16,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 19,
+          "emulator_frame": 2954,
+          "book_turn": 16,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 20,
+          "emulator_frame": 2955,
+          "book_turn": 16,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 21,
+          "emulator_frame": 2956,
+          "book_turn": 16,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 22,
+          "emulator_frame": 2957,
+          "book_turn": 16,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 23,
+          "emulator_frame": 2958,
+          "book_turn": 16,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 24,
+          "emulator_frame": 2959,
+          "book_turn": 16,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 25,
+          "emulator_frame": 2960,
+          "book_turn": 16,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 26,
+          "emulator_frame": 2961,
+          "book_turn": 16,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 8
+        },
+        {
+          "elapsed_frame": 27,
+          "emulator_frame": 2962,
+          "book_turn": 7,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 28,
+          "emulator_frame": 2963,
+          "book_turn": 7,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 29,
+          "emulator_frame": 2964,
+          "book_turn": 7,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 30,
+          "emulator_frame": 2965,
+          "book_turn": 7,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 31,
+          "emulator_frame": 2966,
+          "book_turn": 7,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 32,
+          "emulator_frame": 2967,
+          "book_turn": 7,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 33,
+          "emulator_frame": 2968,
+          "book_turn": 7,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 34,
+          "emulator_frame": 2969,
+          "book_turn": 7,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 17
+        },
+        {
+          "elapsed_frame": 35,
+          "emulator_frame": 2970,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 25
+        },
+        {
+          "elapsed_frame": 36,
+          "emulator_frame": 2971,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 25
+        },
+        {
+          "elapsed_frame": 37,
+          "emulator_frame": 2972,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 25
+        },
+        {
+          "elapsed_frame": 38,
+          "emulator_frame": 2973,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 25
+        },
+        {
+          "elapsed_frame": 39,
+          "emulator_frame": 2974,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 29
+        },
+        {
+          "elapsed_frame": 40,
+          "emulator_frame": 2975,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 30
+        },
+        {
+          "elapsed_frame": 41,
+          "emulator_frame": 2976,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 31
+        },
+        {
+          "elapsed_frame": 42,
+          "emulator_frame": 2977,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 32
+        },
+        {
+          "elapsed_frame": 43,
+          "emulator_frame": 2978,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 32
+        },
+        {
+          "elapsed_frame": 44,
+          "emulator_frame": 2979,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 32
+        },
+        {
+          "elapsed_frame": 45,
+          "emulator_frame": 2980,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 32
+        },
+        {
+          "elapsed_frame": 46,
+          "emulator_frame": 2981,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 36
+        },
+        {
+          "elapsed_frame": 47,
+          "emulator_frame": 2982,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 37
+        },
+        {
+          "elapsed_frame": 48,
+          "emulator_frame": 2983,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 38
+        },
+        {
+          "elapsed_frame": 49,
+          "emulator_frame": 2984,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 39
+        },
+        {
+          "elapsed_frame": 50,
+          "emulator_frame": 2985,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 40
+        },
+        {
+          "elapsed_frame": 51,
+          "emulator_frame": 2986,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 40
+        },
+        {
+          "elapsed_frame": 52,
+          "emulator_frame": 2987,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 40
+        },
+        {
+          "elapsed_frame": 53,
+          "emulator_frame": 2988,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 40
+        },
+        {
+          "elapsed_frame": 54,
+          "emulator_frame": 2989,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 44
+        },
+        {
+          "elapsed_frame": 55,
+          "emulator_frame": 2990,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 45
+        },
+        {
+          "elapsed_frame": 56,
+          "emulator_frame": 2991,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 46
+        },
+        {
+          "elapsed_frame": 57,
+          "emulator_frame": 2992,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 47
+        },
+        {
+          "elapsed_frame": 58,
+          "emulator_frame": 2993,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 48
+        },
+        {
+          "elapsed_frame": 59,
+          "emulator_frame": 2994,
+          "book_turn": 0,
+          "card": 2,
+          "ui_mode": 0,
+          "scene_ticks": 48
+        }
+      ]
+    },
+    "name_patch": {
+      "changed_pixel_bounds": {
+        "one_to_four_letters": [
+          64,
+          64,
+          96,
+          80
+        ],
+        "four_to_eight_letters": [
+          56,
+          64,
+          112,
+          80
+        ]
+      },
+      "maximum_patch_size_pixels": [
+        56,
+        16
+      ]
+    }
+  },
+  "hardware_tested": false
+}

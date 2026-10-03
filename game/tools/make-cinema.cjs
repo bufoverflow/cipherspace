@@ -33,7 +33,7 @@ const TILE_SIZE = 8;
 const TILE_COUNT = WIDTH * HEIGHT / (TILE_SIZE * TILE_SIZE);
 const PALETTE_COUNT = 7; // BG palette 7 belongs to the text interface.
 const COLORS_PER_PALETTE = 4;
-const NAMES = ['PILOT','DOOR_WIDE','DOOR_CLOSE','HATCH_HALF','HATCH_OPEN','CRYSTAL_OUT','CRYSTAL_IN','SHIP_DIM','SHIP_BRIGHT','EMPTY_COCKPIT','MOON_LOG','MOON_NOTE','BOARDING','SEATED','LAUNCH_GROUND','LAUNCH_RISE','LAUNCH_CLOUD','LAUNCH_SPACE','MOON_APPROACH','MOON_SURFACE','ALIEN_WAIT','ALIEN_CONFUSED','ALIEN_CODE','ALIEN_HAPPY'];
+const NAMES = ['PILOT','DOOR_WIDE','DOOR_CLOSE','HATCH_HALF','HATCH_OPEN','CRYSTAL_OUT','CRYSTAL_IN','SHIP_DIM','SHIP_BRIGHT','EMPTY_COCKPIT','MOON_LOG','MOON_NOTE','BOARDING','SEATED','LAUNCH_GROUND','LAUNCH_RISE','LAUNCH_CLOUD','LAUNCH_SPACE','MOON_APPROACH','MOON_SURFACE','ALIEN_WAIT','ALIEN_CONFUSED','ALIEN_CODE','ALIEN_HAPPY','FLIGHT'];
 
 function rgb555(r, g, b) {
   return Math.round(r * 31 / 255) |
@@ -282,14 +282,14 @@ function readEmittedArray(text, name) {
 
 const artDir = path.resolve(gameDir, '../design-assets/cinema');
 const SOURCES = [
-  ['hero-repair-cockpit.png',0],['hatch-repair.png',0],['hatch-repair.png',0],
-  ['hatch-repair.png',1],['hero-repair-cockpit.png',1],['hatch-repair.png',2],
+  ['hero-repair-cockpit-v2.png',0],['hatch-repair.png',0],['hatch-repair.png',0],
+  ['hatch-repair.png',1],['hero-repair-cockpit-v2.png',1],['hatch-repair.png',2],
   ['hatch-repair.png',3],['../opening-scenes-v2.png',1],['../opening-scenes-v2.png',1],
-  ['../opening-scenes-v2.png',2],['accident-launch.png',0],['hero-repair-cockpit.png',3],
-  ['hero-repair-cockpit.png',1],['hero-repair-cockpit.png',3],['accident-launch.png',1],
+  ['../opening-scenes-v2.png',2],['accident-launch.png',0],['hero-repair-cockpit-v2.png',3],
+  ['hero-repair-cockpit-v2.png',1],['hero-repair-cockpit-v2.png',3],['accident-launch.png',1],
   ['accident-launch.png',2],['accident-launch.png',3],['space-moon-alien.png',0],
   ['space-moon-alien.png',1],['space-moon-alien.png',2],['space-moon-alien.png',3],
-  ['meeting.png',0],['meeting.png',1],['meeting.png',2],
+  ['meeting-v2.png',0],['meeting-v2.png',1],['meeting-v2.png',2],['flight.png',null],
 ];
 const rawOptions = {width:WIDTH,height:HEIGHT,channels:3};
 const atlasCache = new Map();
@@ -311,6 +311,12 @@ async function quadrant(filename,q){
   const file=path.resolve(artDir,filename);
   if(!atlasCache.has(file))atlasCache.set(file,fs.readFileSync(file));
   const bytes=atlasCache.get(file),meta=await sharp(bytes).metadata();
+  if(q===null){
+    // A cover crop places the illustrated Moon at (128,28), radius about18.
+    return sharp(bytes).resize(180,108,{fit:'fill',kernel:'lanczos3'})
+      .extract({left:16,top:10,width:WIDTH,height:HEIGHT})
+      .removeAlpha().toColourspace('srgb').raw().toBuffer();
+  }
   // Some generated atlases have an odd dimension. Drop the single center
   // column/row, keeping all four crops exactly equal rather than stretching one.
   const width=Math.floor(meta.width/2),height=Math.floor(meta.height/2);
@@ -338,7 +344,7 @@ function shift(data,dx,dy){
 async function framePixels(index){
   let data=await quadrant(...SOURCES[index]);
   switch(index){
-    case 0:plaque(data,46,64,68,18);break; // Name: tiles x6..13,row9; covers original small badge.
+    // PILOT keeps clear cream fabric; the renderer draws a compact name patch.
     case 2:data=await zoom(data,59,10,96,78);plaque(data,24,24,112,48);break;
     case 7:
       for(let i=0;i<data.length;i+=3){
@@ -397,6 +403,30 @@ function actorData(){
   return {tiles,palettes};
 }
 
+const SHIP = {
+  palette:[[0,0,0],[23,86,92],[242,231,187],[206,151,68]],
+  rows:[
+    '0000000300000000','0000000100000000','0000022222200000','0000231111320000',
+    '0002311111132000','0002111111112000','0032111111112300','0322222222222230',
+    '3212322222232123','2121233333321212','2121232222321212','0322222222222230',
+    '0033322332233300','0000300000030000','0000300000030000','0000000000000000',
+  ],
+};
+function shipData(){
+  assert.equal(SHIP.rows.length,16);assert(SHIP.rows.every(row=>/^[0-3]{16}$/.test(row)));
+  const tiles=[];
+  for(let ty=0;ty<2;ty++)for(let tx=0;tx<2;tx++)for(let y=0;y<8;y++){
+    let lo=0,hi=0;
+    for(let x=0;x<8;x++){
+      const c=Number(SHIP.rows[ty*8+y][tx*8+x]);
+      lo|=(c&1)<<(7-x);hi|=((c>>>1)&1)<<(7-x);
+    }
+    tiles.push(lo,hi);
+  }
+  assert.equal(tiles.length,64);
+  return {tiles,palette:SHIP.palette.map(rgb=>rgb555(...rgb))};
+}
+
 async function main(){
   fs.mkdirSync(outputDir,{recursive:true});fs.mkdirSync(previewDir,{recursive:true});
   const reports=[],previews=[];
@@ -427,18 +457,28 @@ async function main(){
   const actors=actorData();
   fs.writeFileSync(path.join(outputDir,'cinema_actors.c'),'/* Generated original native 16x24 character sprites. */\n#pragma bank 15\n#include <stdint.h>\n\n'+
     arrayDefinition('uint8_t','cinema_actor_tiles',actors.tiles,2,16)+'\n'+arrayDefinition('uint16_t','cinema_actor_palettes',actors.palettes,4,4));
+  const ship=shipData();
+  fs.writeFileSync(path.join(outputDir,'cinema_ship.c'),'/* Generated original native 16x16 pearl, teal and gold craft. */\n#pragma bank 15\n#include <stdint.h>\n\n'+
+    arrayDefinition('uint8_t','cinema_ship_tiles',ship.tiles,2,16)+'\n'+arrayDefinition('uint16_t','cinema_ship_palette',ship.palette,4,4));
   const declarations=NAMES.map((name,index)=>`extern const uint8_t cinema${index}_tiles[3840];\nextern const uint8_t cinema${index}_attrs[240];\nextern const uint16_t cinema${index}_palettes[28];`).join('\n');
   fs.writeFileSync(path.join(outputDir,'cinema.h'),'/* Generated by tools/make-cinema.cjs. */\n#ifndef CIPHERSPACE_CINEMA_H\n#define CIPHERSPACE_CINEMA_H\n#include <stdint.h>\n\nenum {\n'+
-    NAMES.map((name,index)=>`    CIN_${name} = ${index},`).join('\n')+'\n    CINEMA_FRAME_COUNT = 24\n};\n\n'+declarations+
-    '\n\nextern const uint8_t cinema_actor_tiles[192];\nextern const uint16_t cinema_actor_palettes[8];\n\n#endif\n');
+    NAMES.map((name,index)=>`    CIN_${name} = ${index},`).join('\n')+`\n    CINEMA_FRAME_COUNT = ${NAMES.length}\n};\n\n`+declarations+
+    '\n\nextern const uint8_t cinema_actor_tiles[192];\nextern const uint16_t cinema_actor_palettes[8];\nextern const uint8_t cinema_ship_tiles[64];\nextern const uint16_t cinema_ship_palette[4];\n\n#endif\n');
   fs.writeFileSync(path.join(artDir,'actors.json'),JSON.stringify({frameWidth:16,frameHeight:24,tileOrder:'row-major,2columnsx3rows',transparentIndex:0,actors:ACTORS},null,2)+'\n');
-  fs.writeFileSync(path.join(outputDir,'cinema.json'),JSON.stringify({width:WIDTH,height:HEIGHT,reservedUIPalette:7,frames:reports,actorBytes:208,actorBank:15,sourceHashes:[...atlasCache].map(([file,bytes])=>({file:path.relative(gameDir,file),sha256:crypto.createHash('sha256').update(bytes).digest('hex')})),overlays:{pilotName:{x:48,y:72,w:64,h:8},doorNote:{x:32,y:32,w:96,h:32},moonNote:{x:32,y:32,w:96,h:32},sharedCode:{x:40,y:72,w:80,h:16},crystalStart:{x:68,y:38},crystalSocket:{x:103,y:38},southPoleTarget:{x:118,y:75},surfaceBeacon:{x:132,y:65}}},null,2)+'\n');
-  await sharp({create:{width:WIDTH*8,height:HEIGHT*12,channels:3,background:'#09162a'}}).composite(previews).png().toFile(path.join(previewDir,'cinema-contact-sheet.png'));
+  fs.writeFileSync(path.join(artDir,'ship.json'),JSON.stringify({frameWidth:16,frameHeight:16,tileOrder:'row-major,2columnsx2rows',transparentIndex:0,...SHIP},null,2)+'\n');
+  fs.writeFileSync(path.join(outputDir,'cinema.json'),JSON.stringify({width:WIDTH,height:HEIGHT,reservedUIPalette:7,frames:reports,actorBytes:208,actorBank:15,shipBytes:72,shipBank:15,sourceHashes:[...atlasCache].map(([file,bytes])=>({file:path.relative(gameDir,file),sha256:crypto.createHash('sha256').update(bytes).digest('hex')})),overlays:{pilotName:{centerX:80,y:64,minWidth:16,maxWidth:56,h:16},doorNote:{x:32,y:32,w:96,h:32},moonNote:{x:32,y:32,w:96,h:32},sharedCode:{x:40,y:72,w:80,h:16},crystalStart:{x:68,y:38},crystalSocket:{x:103,y:38},flightMoon:{x:128,y:28,radius:18},southPoleTarget:{x:118,y:75},surfaceBeacon:{x:132,y:65}}},null,2)+'\n');
+  await sharp({create:{width:WIDTH*8,height:HEIGHT*2*Math.ceil(NAMES.length/4),channels:3,background:'#09162a'}}).composite(previews).png().toFile(path.join(previewDir,'cinema-contact-sheet.png'));
   const actorPixels=Buffer.alloc(32*24*4);
   ACTORS.forEach((actor,n)=>actor.rows.forEach((row,y)=>[...row].forEach((v,x)=>{
     const i=Number(v),offset=(y*32+n*16+x)*4;actorPixels.set([...actor.palette[i],i?255:0],offset);
   })));
   await sharp(actorPixels,{raw:{width:32,height:24,channels:4}}).resize(256,192,{kernel:'nearest'}).png().toFile(path.join(previewDir,'cinema-actors.png'));
-  console.log('PASS:24frames,99264backgroundbytes,12408bytesperbank7..14;208actorbytesbank15;allCarraysroundtripped.');
+  const shipPixels=Buffer.alloc(16*16*4);
+  SHIP.rows.forEach((row,y)=>[...row].forEach((v,x)=>{
+    const i=Number(v);shipPixels.set([...SHIP.palette[i],i?255:0],(y*16+x)*4);
+  }));
+  await sharp(shipPixels,{raw:{width:16,height:16,channels:4}}).png().toFile(path.join(previewDir,'cinema-ship-native.png'));
+  await sharp(shipPixels,{raw:{width:16,height:16,channels:4}}).resize(256,256,{kernel:'nearest'}).png().toFile(path.join(previewDir,'cinema-ship.png'));
+  console.log(`PASS:${NAMES.length}frames,${NAMES.length*4136}backgroundbytes,12408bytesperbank7..14;4416bytesbank15 including actors and ship;allCarraysroundtripped.`);
 }
 main().catch(error=>{console.error(error);process.exitCode=1;});

@@ -9,10 +9,11 @@ import io
 import json
 import os
 import re
+import sys
 from importlib.metadata import version
 from pathlib import Path
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageChops, ImageDraw
 from pyboy import PyBoy
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -32,11 +33,54 @@ checks = []
 frame_audit = {'frames_observed': 0, 'lcd_disabled_frames': 0,
                'uniform_frames': 0, 'actions': {}}
 animation_audit = {}
+reading_audit = {}
+
+
+def preserve_failure(kind, error, traceback):
+    """Keep the actual failed frame and action history before Python exits."""
+    sys.excepthook = sys.__excepthook__
+    session = globals().get('s')
+    if session is not None:
+        session.p.screen.image.save(SHOTS / 'failed-check.png')
+        (OUTPUT / 'failed-check.json').write_text(json.dumps({
+            'rom_sha256': hashlib.sha256(ROM.read_bytes()).hexdigest(),
+            'error': str(error), 'frame': session.frames,
+            'scene': session.state()[0], 'card': session.state()[1],
+            'ui_mode': session.value('ui_mode'), 'book_turn': session.value('book_turn'),
+            'recent_actions': session.recent_actions, 'checks_passed': len(checks),
+            'frame_audit': frame_audit, 'animation_audit': animation_audit,
+            'reading_audit': reading_audit}, indent=2) + '\n')
+    sys.__excepthook__(kind, error, traceback)
+
+
+sys.excepthook = preserve_failure
 
 
 def check(condition, description):
     assert condition, description
     checks.append(description)
+
+
+def native_art(index):
+    """Decode the ROM's source illustration independently of its screen renderer."""
+    rom = ROM.read_bytes()
+    def data(kind, length):
+        symbol = SYMS[f'_cinema{index}_{kind}']
+        offset = (symbol >> 16) * 0x4000 + (symbol & 0xffff) - 0x4000
+        return rom[offset:offset + length]
+    tiles, attrs, raw_palette = data('tiles', 3840), data('attrs', 240), data('palettes', 56)
+    palettes = [int.from_bytes(raw_palette[i:i + 2], 'little') for i in range(0, 56, 2)]
+    image = Image.new('RGB', (160, 96))
+    for tile in range(240):
+        for y in range(8):
+            low, high = tiles[tile * 16 + y * 2:tile * 16 + y * 2 + 2]
+            for x in range(8):
+                value = ((low >> (7 - x)) & 1) + 2 * ((high >> (7 - x)) & 1)
+                color = palettes[attrs[tile] * 4 + value]
+                image.putpixel(((tile % 20) * 8 + x, (tile // 20) * 8 + y),
+                               ((color & 31) << 3, ((color >> 5) & 31) << 3,
+                                ((color >> 10) & 31) << 3))
+    return image
 
 
 class Session:
@@ -188,6 +232,18 @@ class Session:
     def shot(self, name):
         self.p.screen.image.save(SHOTS / (name + '.png'))
 
+    def await_display_commit(self, previous_map, label, limit=120):
+        """Wait for the prepared screen to replace the visible background map."""
+        self.record_action(f'wait for visible {label}')
+        for elapsed in range(limit):
+            if (self.p.memory[0xff40] & 0x08) != previous_map:
+                # The map changes during VBlank; observe its first drawn frame.
+                self.tick(1)
+                check(True, f'{label} commits a complete visible screen')
+                return
+            self.tick(1)
+        raise AssertionError(f'{label} did not commit a visible screen in {limit} frames')
+
     def await_scene(self, expected, limit=1800):
         self.record_action(f'wait for scene {expected}')
         for _ in range(limit):
@@ -231,6 +287,140 @@ class Session:
         self.motion_evidence(label, images)
         check(self.state() == before, f'{label} leaves the story under player control')
         check(distinct >= 2, f'{label} remains visibly animated while waiting')
+
+    def reading_ticker(self, title, label):
+        """Watch one complete headline pass without pressing any buttons."""
+        before = self.state()
+        span = len(title) - 20
+        offsets, durations, pictures = [], {}, {}
+        self.record_action(f'read {label}')
+        check(self.value('ticker_offset') == 0,
+              f'{label} begins with the first complete headline window')
+        for elapsed in range(1800):
+            offset = self.value('ticker_offset')
+            if not offsets or offset != offsets[-1]:
+                offsets.append(offset)
+                if len(offsets) > 1 and offset == 0:
+                    break
+            durations[offset] = durations.get(offset, 0) + 1
+            # Let a changed hidden map reach the visible screen before capture.
+            if durations[offset] == 16:
+                pictures[offset] = self.p.screen.image.crop((0, 0, 160, 8)).tobytes()
+                self.shot(f'{label}-window-{offset:02d}')
+            self.tick(1)
+        reading_audit[label] = {'offsets': offsets, 'frames_per_window': durations}
+        (OUTPUT / 'reading-audit.json').write_text(json.dumps(reading_audit, indent=2) + '\n')
+        check(offsets == list(range(span + 1)) + [0],
+              f'{label} advances one character at a time through full windows, then restarts')
+        # Entry and the settled puzzle snapshot precede this observation by
+        # roughly half a second; the remaining initial hold must still be long.
+        check(durations.get(0, 0) >= 130,
+              f'{label} holds its initial headline for about three seconds after entry')
+        check(all(36 <= durations.get(offset, 0) <= 56 for offset in range(1, span)),
+              f'{label} moves at about three quarters of a second per character')
+        check(durations.get(span, 0) >= 180,
+              f'{label} pauses on the final complete headline for at least three seconds')
+        check(len(pictures) == span + 1 and len(set(pictures.values())) == span + 1,
+              f'{label} visibly renders every headline window')
+        check(self.state() == before, f'reading {label} never changes puzzle progress')
+
+    def turn_book_page(self, key, target, label, pause=False):
+        """A held turn button cannot skim past the chosen page."""
+        self.record_action(f'turn log book with {key}')
+        self.p.button_press(key)
+        images, turning_frames = [], 0
+        trace = []
+        reading_audit[label] = {'turn_trace': trace}
+        opposite = 'b' if key == 'a' else 'a'
+        interaction_frame = None
+        corner = (128, 72, 160, 96) if key == 'a' else (0, 72, 32, 96)
+        prior_corner = self.p.screen.image.crop(corner).tobytes()
+        for elapsed in range(60):
+            self.tick(1)
+            ticks = SYMS['_scene_ticks']
+            trace.append({'elapsed_frame': elapsed, 'emulator_frame': self.frames,
+                          'book_turn': self.value('book_turn'), 'card': self.state()[1],
+                          'ui_mode': self.value('ui_mode'),
+                          'scene_ticks': int.from_bytes(bytes(self.p.memory[ticks:ticks + 2]), 'little')})
+            if elapsed < 24:
+                self.shot(f'{label}-frame-{elapsed:02d}')
+            turning_frames += int(bool(self.value('book_turn')))
+            if interaction_frame is None and 0 < self.value('book_turn') < 24:
+                # RAM changes before synchronous artwork staging finishes.
+                # Begin the second input only once the fold is visible and its
+                # timer is running, when the player can actually react to it.
+                check(self.p.screen.image.crop(corner).tobytes() != prior_corner,
+                      f'{label} displays a turning corner before accepting a second input')
+                interaction_frame = elapsed
+                if pause:
+                    self.p.button_release(key)
+                    self.press('start')
+                    trace.append({'after_start_press': True, 'emulator_frame': self.frames,
+                                  'book_turn': self.value('book_turn'),
+                                  'card': self.state()[1], 'ui_mode': self.value('ui_mode')})
+                    check(self.value('ui_mode') == 4, 'Start can pause a log-book page turn')
+                    frozen = self.value('book_turn')
+                    self.tick(90)
+                    check(self.value('book_turn') == frozen and self.state()[1] == target,
+                          'pausing freezes the page turn without changing its destination')
+                    self.press('a')
+                    check(self.value('ui_mode') == 0, 'the paused page turn resumes normally')
+                    self.p.button_press(key)
+                else:
+                    self.p.button_press(opposite)
+            if interaction_frame is not None and elapsed == interaction_frame + 6:
+                self.p.button_release(opposite)
+                check(self.state()[0] == OWNER_LOG and self.state()[1] == target,
+                      f'{label} ignores extra turn input while the page is moving')
+            if elapsed % 6 == 0:
+                images.append(self.p.screen.image.copy())
+        self.p.button_release(key)
+        self.tick(6)
+        distinct = len({image.crop(corner).tobytes() for image in images})
+        animation_audit[label] = {'observed_frames': 60,
+                                  'distinct_page_corner_images': distinct,
+                                  'page_corner_bounds': list(corner),
+                                  'turning_frames_observed': turning_frames}
+        self.motion_evidence(label, images)
+        check(interaction_frame is not None, f'{label} exposes an interactive page-turn interval')
+        check(distinct >= 3, f'{label} visibly animates through an intermediate page position')
+        check(self.state()[0] == OWNER_LOG and self.state()[1] == target
+              and self.value('book_turn') == 0,
+              f'{label} settles on one page and does not repeat from a held button')
+
+    def log_book(self):
+        """The reader owns the pace and can turn back to reread a page."""
+        self.scene(OWNER_LOG)
+        self.press('b')
+        check(self.state()[1] == 0 and not self.value('book_turn'),
+              'B on the first log-book page stays at the beginning')
+        for page, label in enumerate(['15a-moon-visit', '15b-ship-trouble', '15c-safe-pickup']):
+            check(self.state()[1] == page, f'{label} appears in story order')
+            before = self.state()
+            self.record_action(f'read log-book page {page + 1}')
+            bounds = [(108, 68, 116, 76), (92, 44, 100, 52), (28, 20, 36, 28)][page]
+            subject = native_art(18 if page == 0 else 10).crop(bounds).tobytes()
+            for frame in range(480):
+                self.tick(1)
+                if self.p.screen.image.convert('RGB').crop(bounds).tobytes() != subject:
+                    self.shot(f'{label}-covered-subject-{frame}')
+                    check(False, f'{label} marker must preserve the illustration beneath its center')
+            check(True, f'{label} keeps the Moon, ship or alien face visible through every marker pulse')
+            check(self.state() == before,
+                  f'{label} stays on screen for reading without an automatic timer')
+            self.shot(label)
+            reading_audit[label] = {'neutral_reading_frames': 480,
+                                    'player_turns_pages': True}
+            if page == 1:
+                self.turn_book_page('b', 0, '15-turn-back', pause=True)
+                self.turn_book_page('a', 1, '15-return-to-middle')
+            if page < 2:
+                self.turn_book_page('a', page + 1, f'15-turn-forward-{page + 1}')
+            else:
+                self.turn_book_page('b', 1, '15-reread-middle')
+                self.turn_book_page('a', 2, '15-return-to-last')
+                self.press('a')
+                self.scene(MOON_NOTE)
 
     def animation(self, scene, label, destination=None, limit=1200):
         """Observe authored motion using actual frames and normal button presses."""
@@ -407,12 +597,29 @@ s.type_name('Y')
 s.press('b')
 check(s.name() == 'NOVA', 'letters remain editable before Start')
 s.shot('02-name-setup')
+name_setup_image = s.p.screen.image.convert('RGB')
+button_images = []
+for key, x in [('A', 8), ('B', 80)]:
+    button = name_setup_image.crop((x, 128, x + 8, 136))
+    background = button.getpixel((0, 0))
+    widths = []
+    for y in range(8):
+        lit = [x for x in range(8) if button.getpixel((x, y)) != background]
+        widths.append(lit[-1] - lit[0] + 1 if lit else 0)
+    check(all(button.getpixel(point) == background
+              for point in [(0, 0), (7, 0), (0, 7), (7, 7)])
+          and 0 < widths[0] == widths[-1] < max(widths) == 8,
+          f'{key} is visibly round, with inset corners and a wider middle')
+    button.resize((128, 128), Image.Resampling.NEAREST).save(SHOTS / f'button-{key.lower()}-detail.png')
+    button_images.append(button.tobytes())
+check(button_images[0] != button_images[1], 'round A and B icons retain distinct letter shapes')
+previous_map = s.p.memory[0xff40] & 0x08
 s.press('start')
 s.scene(PILOT_CARD)
 check(s.name() == 'NOVA', 'Start confirms the chosen name before showing the pilot')
-s.tick(18)
+s.await_display_commit(previous_map, 'four-letter pilot')
 s.shot('03-pilot')
-check(s.shows('NOVA'), 'the pilot introduction displays the chosen name')
+four_letter_portrait = s.p.screen.image.copy()
 s.press('a')
 s.scene(YARD)
 s.tick(18)
@@ -424,6 +631,7 @@ s.press('a')
 s.scene(HATCH)
 s.tick(18)
 s.shot('06-open-code')
+s.reading_ticker('MATCH THE SHAPES TO OPEN THE DOOR', '06-reading-ticker')
 
 # Both halves of the active cipher column must visibly move together.
 before_answers = s.state()[4:11]
@@ -514,12 +722,18 @@ s.scene(EMPTY_SEAT)
 s.tick(18)
 s.shot('14-empty-cockpit')
 s.press('a')
+check(s.state()[0] == EMPTY_SEAT and s.state()[1] == 0,
+      'the first cockpit story beat ignores an immediate A press')
+s.tick(90)
+s.press('a')
 check(s.state()[0] == EMPTY_SEAT and s.state()[1] == 1,
       'the empty cockpit gives the player a second story beat')
 s.press('a')
-s.animation(OWNER_LOG, '15-owner-log')
-s.shot('15-owner-log')
+check(s.state()[0] == EMPTY_SEAT and s.state()[1] == 1,
+      'a rapid double tap cannot skip the second cockpit story beat')
+s.tick(90)
 s.press('a')
+s.log_book()
 s.animation(MOON_NOTE, '16-moon-zoom')
 s.shot('16-moon-note')
 s.press('a')
@@ -721,17 +935,44 @@ s.name_pick(25)
 check(s.value('name_length') == 8 and s.value('name_error'),
       'a ninth letter is rejected visibly')
 check(s.state()[0] == NAME_SETUP, 'pressing A on a letter never finishes name setup')
+previous_map = s.p.memory[0xff40] & 0x08
 s.press('start')
 s.scene(PILOT_CARD)
 check(s.state()[28:37] == b'STARLITE\0', 'the longest name keeps its terminating NUL')
-s.tick(18)
+s.await_display_commit(previous_map, 'eight-letter pilot')
 s.shot('31-long-name-pilot')
+eight_letter_portrait = s.p.screen.image.copy()
 long_name_save = s.power_off()
 s = Session(long_name_save)
 s.press('a')
 s.scene(YARD)
 check(s.name() == 'STARLITE', 'all eight name letters survive a restart')
 s.p.stop(save=False)
+
+# A single letter and the full eight-letter name share one small suit patch.
+s = Session()
+s.press('a')
+s.type_name('A')
+previous_map = s.p.memory[0xff40] & 0x08
+s.press('start')
+s.scene(PILOT_CARD)
+s.await_display_commit(previous_map, 'one-letter pilot')
+s.shot('32-short-name-pilot')
+one_letter_portrait = s.p.screen.image.copy()
+check(s.name() == 'A', 'a one-letter name is accepted for the pilot introduction')
+s.p.stop(save=False)
+patch_changes = {}
+for label, first, second in [
+        ('one_to_four_letters', one_letter_portrait, four_letter_portrait),
+        ('four_to_eight_letters', four_letter_portrait, eight_letter_portrait)]:
+    difference = ImageChops.difference(first.convert('RGB'), second.convert('RGB')).getbbox()
+    check(difference is not None, f'{label} visibly changes the suit name patch')
+    x0, y0, x1, y1 = difference
+    check(56 <= x0 < x1 <= 112 and 64 <= y0 < y1 <= 80,
+          f'{label} fits inside the compact chest patch without changing the girl or captions')
+    patch_changes[label] = list(difference)
+reading_audit['name_patch'] = {'changed_pixel_bounds': patch_changes,
+                             'maximum_patch_size_pixels': [56, 16]}
 
 # Recovery uses durable flight checkpoints, avoiding transient animation timing.
 records = records_from(flight_save)
@@ -805,13 +1046,22 @@ contact_sheet(['05-door-zoom-early', '05-door-zoom-middle', '05-door-zoom-late',
                '12-crystal-repair-early', '12-crystal-repair-middle', '12-crystal-repair-late',
                '19-powered-ascent-early', '19-powered-ascent-middle', '19-powered-ascent-late'],
               'cinema-contact-sheet.png')
+contact_sheet(['32-short-name-pilot', '03-pilot', '31-long-name-pilot',
+               '15a-moon-visit', '15b-ship-trouble', '15c-safe-pickup',
+               '02-name-setup', '06-open-code', '20-flight'],
+              'reading-contact-sheet.png')
+contact_sheet(['03-pilot', '18-boarding-early', '18-boarding-late',
+               '19-powered-ascent-early', '25a-hello-confused', '29-friends'],
+              'character-contact-sheet.png')
 check(frame_audit['lcd_disabled_frames'] == 0, 'LCD stays enabled on every observed frame after boot')
 check(frame_audit['uniform_frames'] == 0, 'no blank frame appears during inputs, scenes, or animation')
 report = {'rom_sha256': hashlib.sha256(ROM.read_bytes()).hexdigest(),
           'emulator': f'PyBoy {version("pyboy")}', 'checks_passed': len(checks),
           'checks': checks, 'frame_audit': frame_audit, 'animation_audit': animation_audit,
+          'reading_audit': reading_audit,
           'hardware_tested': False}
 (OUTPUT / 'playthrough-report.json').write_text(json.dumps(report, indent=2) + '\n')
+(OUTPUT / 'reading-audit.json').write_text(json.dumps(reading_audit, indent=2) + '\n')
 print(f'PASS: {len(checks)} checks; alphabet, pilot, animated story, full route, '
       'countdown, ascent, controlled landing, first contact and v3 save recovery. '
       f'{frame_audit["frames_observed"]} consecutive frames checked for blanking.')

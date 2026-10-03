@@ -22,6 +22,7 @@ extern uint8_t ui_mode, selection, slot, choice, hint_step, word_index, wrong, h
 extern uint8_t name_choice, name_length, name_error;
 extern uint8_t launch_count, render_tile_offset;
 extern uint8_t anim_frame, ticker_offset, nav_ready, cached_art;
+extern uint8_t book_turn, book_direction;
 extern uint16_t scene_ticks;
 extern uint8_t pending_art_signed, visible_art;
 extern volatile uint8_t display_art_signed;
@@ -39,6 +40,7 @@ void render_game(void) BANKED;
 void load_scene(uint8_t index) NONBANKED;
 void load_art(uint8_t id,const uint8_t *tiles,const uint8_t *attrs,const uint16_t *palettes) NONBANKED;
 void load_alias(uint8_t tile,uint8_t source) NONBANKED;
+void load_ui_tile(uint8_t tile,const uint8_t *bits) NONBANKED;
 void load_flight(void) NONBANKED;
 void load_cinema(uint8_t index) NONBANKED;
 void load_cinema_actors(void) NONBANKED;

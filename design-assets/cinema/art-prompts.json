@@ -1,7 +1,7 @@
 {
   "tool": "Built-in image generation",
-  "note": "These briefs summarize the final image-generation prompts. Native assets add editable plaques, positioning, and deterministic RGB555 palette conversion.",
-  "commonPrompt": "Create an exact 2×2 atlas with equal quadrants and no gutters, borders, text, letters, or numbers. Use a rich pixel-adventure style with deliberate clusters and compositions readable at 160×96. Keep the rounded pearl-silver spacecraft, dark teal canopy, jade fins, brass details, twin engine pods, and small antenna consistent. The girl has a dark brown bob, a confident expression, and a cream-and-teal spacesuit with amber accents. The mood is gentle and adventurous.",
+  "note": "Source atlases are preserved. Revised ImageGen sources retain the canonical girl and suit; native conversion supplies exact cipher panels and deterministic RGB555 palettes.",
+  "commonPrompt": "Create an exact 2\u00d72 atlas with equal quadrants and no gutters, borders, text, letters, or numbers. Use a rich pixel-adventure style with deliberate clusters and compositions readable at 160\u00d796. Keep the rounded pearl-silver spacecraft, dark teal canopy, jade fins, brass details, twin engine pods, and small antenna consistent. The girl has a dark brown bob, a confident expression, and a cream-and-teal spacesuit with amber accents. The mood is gentle and adventurous.",
   "atlases": [
     {
       "file": "hero-repair-cockpit.png",
@@ -23,7 +23,7 @@
         "../opening-scenes-v2.png",
         "hero-repair-cockpit.png"
       ],
-      "brief": "An earlier Moon accident with the alien safe in an escape pod and the ship’s seat visibly empty. The other panels show the girl’s later launch from the backyard, above the house, and through the clouds.",
+      "brief": "An earlier Moon accident with the alien safe in an escape pod and the ship\u2019s seat visibly empty. The other panels show the girl\u2019s later launch from the backyard, above the house, and through the clouds.",
       "correction": "Remove the human girl from the earlier Moon accident. Show an empty pilot seat and the alien safely outside in an escape pod. Preserve the girl in the three later launch panels."
     },
     {
@@ -44,10 +44,39 @@
     }
   ],
   "nativeOverlays": {
-    "pilotBadge": "x46,y64,w68,h18; renderer name x48,y72,w64,h8",
+    "pilotBadge": "No baked badge. The runtime draws a compact cream, teal and amber name patch at y64, height 16: one letter at x72, width 16; four letters at x64, width 32; eight letters at x56, width 56.",
     "notes": "x24,y24,w112,h48; renderer places exact cipher symbols at tile(4,5), (7,5), (10,5), (13,5)",
     "sharedCode": "x32,y64,w96,h28; renderer places HI at tile(9,8), H= and I= labels at (5,9) and (10,9), and symbols at (7,9) and (12,9)"
   },
-  "nativeActors": "actors.json contains two original 16×24 sprites, one girl and one alien. Each uses six tiles, three opaque colors, and index 0 for transparency.",
-  "conversion": "game/tools/make-cinema.cjs produces 24 frames at 160×96, with 240 tiles and seven palettes of four RGB555 colors per frame. Palette 7 is reserved for the interface."
+  "nativeActors": "actors.json contains two original 16\u00d724 sprites, one girl and one alien. Each uses six tiles, three opaque colors, and index 0 for transparency.",
+  "conversion": "game/tools/make-cinema.cjs produces 25 scenes at 160 \u00d7 96, each with 240 tiles and seven palettes of four RGB555 colors. Palette 7 is reserved for UI. Bank 15 contains flight art (4,136 bytes), actors (208 bytes) and the ship (72 bytes): 4,416 bytes total.",
+  "revisions": [
+    {
+      "file": "hero-repair-cockpit-v2.png",
+      "tool": "Built-in image generation",
+      "references": [
+        "hero-repair-cockpit.png"
+      ],
+      "prompt": "Preserve all four equal atlas panels and the exact canonical girl. Remove only the oversized dark chest plaque and gold rim from the top-left portrait, replacing it with continuous cream suit fabric. Preserve teal collar/cuffs, dark teal harness, gold buckles, round shoulder badge, and all other panels. No replacement chest rectangle or text; the runtime draws the compact name patch."
+    },
+    {
+      "file": "meeting-v2.png",
+      "tool": "Built-in image generation",
+      "references": [
+        "meeting.png",
+        "hero-repair-cockpit-v2.png"
+      ],
+      "prompt": "Match the exact portrait girl in every Moon panel: warm skin, dark brown bob and bangs, cream suit fabric, teal collar/cuffs, dark teal harness with small amber/gold buckles, round teal shoulder badge. Remove chest plaques and replace with continuous cream fabric. Keep the clear outdoor helmet, matching the portrait helmet colors; keep face/hair visible. Preserve poses, small child proportions, affectionate mint alien with amber eyes/scarf, shared-code board, lunar scenery, beacon and equal 2x2 atlas layout."
+    },
+    {
+      "file": "flight.png",
+      "tool": "Built-in image generation",
+      "references": [
+        "space-moon-alien.png"
+      ],
+      "prompt": "Create one standalone 5:3 illustrated space-flight background matching the source atlas: detailed blue Earth partly outside lower-left, rich white clouds/green continents/blue atmosphere, cratered gray Moon at upper-right, deep navy playable corridor across center, sparse small warm stars and faint edge nebulae. No ship, pilot, exhaust, route line, UI, lettering or borders. A follow-up moved only the Moon right and down while preserving its size and texture.",
+      "import": "Uniform resize to 180 \u00d7 108, then crop 160 \u00d7 96 at (16, 10); final Moon center approximately (128, 28), radius 18."
+    }
+  ],
+  "nativeShip": "ship.json contains an original 16 \u00d7 16 round pearl, teal and gold craft: four 8 \u00d7 8 tiles, three opaque colors plus transparency. Generated bank 15 exports cinema_ship_tiles[64] and cinema_ship_palette[4]."
 }

@@ -1,0 +1,52 @@
+CIPHERSPACE
+Chapter 1: The Empty Ship | v0.3.1
+
+Choose your name, suit up, discover a ship, and rescue its pilot on the Moon.
+
+WHAT CHANGED
+Round A/B icons resemble the console buttons, and story actions have more space.
+The pilot wears a smaller name patch. Scrolling instructions pause at each end
+and move slowly. The illustrated log book lets the reader turn pages and look
+back at their own pace. The pilot's appearance and suit stay consistent across
+scenes, and steering to the Moon uses the same illustrated style as the story.
+
+CONTROLS
+Name: D-pad selects A-Z; A adds; B erases; Start finishes.
+A and B appear as round buttons beside each action. Start and Select use pills.
+Puzzles: Left/Right chooses; Up/Down moves the linked symbol-and-answer cursor.
+A applies a choice; B undoes. Select offers free help. Start pauses.
+The quiet blue cursor connects the symbol to its answer. Amber marks your choice.
+Wrong answers stay editable. Solving a note triggers a visible action.
+Flight: arrows steer, release to stop. Approach the Moon, then steer to the
+south-pole landing light and press A when LAND appears. On the surface, walk
+left/right toward the light; press A when MEET appears.
+The countdown and ascent play through before steering begins.
+Log book: A turns a page; B looks back. Pages stay open until the reader turns them.
+
+SAVES
+This overhaul starts fresh: v0.1/v0.2 saves are not loaded or migrated.
+New v0.3 adventures save their own name and progress. New Trip asks for a
+two-second A+B hold. Restarting during countdown/ascent returns to Lift Off.
+
+FLASH YOUR DEVDAY CARTRIDGE
+Complete Developer Mode activation yourself in the official ModRetro Updater:
+https://support.modretro.com/en_us/chromatic-devday-edition-quickstart-guid-By1iOlcMg
+
+Install the official CLI if needed (Node.js 18 or newer):
+  npm install --global @modretro/chromatic-cli@1.2.1
+
+Insert the DevDay cartridge, power on the Chromatic, and connect USB.
+From this extracted folder, run:
+  chromatic-cli list-devices
+  chromatic-cli detect-cart --all
+  chromatic-cli write-homebrew ./cipherspace.gbc --expect-sha256 968900bc7ba670e5ec7ea172ca5ec384ce0c9a76e3b293f0b7d795944ea7f4d7
+
+Writing replaces the current cartridge game and may erase its saves.
+Review the selected cartridge before accepting the CLI confirmation.
+After a verified write, disconnect USB and test boot, controls, sound and saves.
+
+VALIDATION
+Native Game Boy Color ROM: 256 KiB, MBC5, 8 KiB battery RAM.
+262 emulator checks passed against the included ROM digest.
+10523 gameplay frames audited: no blank or LCD-off frames.
+The preview contains real emulator frames. Native cartridge validation is pending.

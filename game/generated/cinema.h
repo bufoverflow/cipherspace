@@ -28,7 +28,8 @@ enum {
     CIN_ALIEN_CONFUSED = 21,
     CIN_ALIEN_CODE = 22,
     CIN_ALIEN_HAPPY = 23,
-    CINEMA_FRAME_COUNT = 24
+    CIN_FLIGHT = 24,
+    CINEMA_FRAME_COUNT = 25
 };
 
 extern const uint8_t cinema0_tiles[3840];
@@ -103,8 +104,13 @@ extern const uint16_t cinema22_palettes[28];
 extern const uint8_t cinema23_tiles[3840];
 extern const uint8_t cinema23_attrs[240];
 extern const uint16_t cinema23_palettes[28];
+extern const uint8_t cinema24_tiles[3840];
+extern const uint8_t cinema24_attrs[240];
+extern const uint16_t cinema24_palettes[28];
 
 extern const uint8_t cinema_actor_tiles[192];
 extern const uint16_t cinema_actor_palettes[8];
+extern const uint8_t cinema_ship_tiles[64];
+extern const uint16_t cinema_ship_palette[4];
 
 #endif

@@ -1,22 +1,24 @@
 # Cipherspace — Chapter 1
 
-A native Game Boy Color game for the ModRetro Chromatic. Version 0.3.0 rebuilds the opening around visible actions and a first encounter with the stranded alien.
+A native Game Boy Color game for the ModRetro Chromatic. Version 0.3.1 refines the opening from playtest feedback: round action buttons, a log book the player turns, a smaller name patch, and consistent illustrated characters and flight scenery.
 
 ## Play
 
-Use the D-pad to select a letter in **YOUR NAME**. **A** adds, **B** erases, and **Start** finishes. The pilot wears your chosen name on her spacesuit. All action prompts separate a button badge from the action text.
+Use the D-pad to select a letter in **YOUR NAME**. **A** adds, **B** erases, and **Start** finishes. The pilot wears your chosen name on her spacesuit. All action prompts separate a button badge from the action text. A and B use round button icons; Start and Select use labeled pills.
 
 | Button | Action |
 | --- | --- |
 | D-pad | Choose, steer, or walk |
 | A | Perform the displayed action |
-| B | Undo a puzzle choice |
+| B | Undo a puzzle choice, or turn back in the log book |
 | Select | Free word and puzzle help |
 | Start | Finish name entry, or pause during play |
 
-In a puzzle, Left/Right selects a letter or symbol. Up/Down moves the linked symbol-and-answer cursor. A enters your choice; repeated symbols fill together. B undoes. Blue connects the active pair; amber marks the choice you will enter. A wrong answer stays selected and editable. Solving a puzzle triggers the related action in the scene.
+In a puzzle, Left/Right selects a letter or symbol. Up/Down moves the linked symbol-and-answer cursor. A enters your choice; repeated symbols fill together. B undoes. Blue connects the active pair; amber marks the choice you will enter. The instruction line pauses for three seconds before scrolling one character every three-quarters of a second, then pauses on its final full line. A wrong answer stays selected and editable. Solving a puzzle triggers the related action in the scene.
 
 After the ten-second countdown and powered ascent, steer toward the Moon. Line up over the south-pole landing light, then press A when LAND appears. Walk toward the alien and press A when MEET appears. Try greeting her, notice her response, and use the shared symbol key to send a greeting she understands.
+
+The empty-seat screens wait for a fresh A press. Open the illustrated ship's log book, then press A to turn the page or B to look back. Each page stays open for as long as the reader needs. A short page-turn animation makes each turn visible; holding a button cannot skip pages.
 
 The pause menu controls sound and returns to the title. New Trip requires holding A+B for two seconds. Progress saves at choices and milestones. This redesign uses version 3 saves and deliberately ignores older saves: it starts fresh from name entry. Its own saved trips can resume across play sessions.
 
@@ -25,7 +27,7 @@ The pause menu controls sound and returns to the title. New Trip requires holdin
 1. **Suit up:** meet a confident girl pilot wearing the chosen name.
 2. **Discover:** inspect the backyard ship and zoom into its encoded door note.
 3. **Open and repair:** decode OPEN, watch the hatch open, fit the loose crystal into its socket, and wake the ship.
-4. **Find a reason to fly:** see the empty seat and play a cockpit recording. The owner visited the Moon’s south pole, escaped a malfunction, and lost her ship to Earth. The next note encodes MOON.
+4. **Find a reason to fly:** see the empty seat and open the ship's illustrated log book. Turn its pages to discover that the owner visited the Moon’s south pole, escaped a malfunction, and lost her ship to Earth. The next note encodes MOON.
 5. **Launch:** climb into the seat, activate the console, count down from 10, and rise from the backyard through clouds into space.
 6. **Rescue:** steer, align with a safe landing spot, and walk toward a pulsing signal.
 7. **Make contact:** English greetings leave the alien puzzled. Her response points to the shared symbols; encoding HI earns a warm response and a new friend.
@@ -50,13 +52,13 @@ game/.venv/bin/python -m pyboy game/build/cipherspace.gbc
 
 The output is `game/build/cipherspace.gbc`. The build uses GBDK 4.5.0 at `game/.tools/gbdk`; override it with `make -C game GBDK=/absolute/path/to/gbdk`. It also runs the ROM header check. `make test` runs `game/tests/playthrough.py`; the local requirements pin PyBoy 2.6.1. This release is tested with the shared toolchain's PyBoy 2.7.0; the report records the version used.
 
-`make -C game release` runs the tests and creates `game/dist/cipherspace-chapter1-v0.3.0.zip` and its unpacked folder, including controls, flashing instructions, checksums, test evidence, and an emulator preview. Packaging checks that the ROM is the exact file that passed the playthrough. The v0.1.0 and v0.2.0 releases are retained. Final releases in `game/dist` can be committed; build output, toolchains, virtual environments, and generated previews are ignored.
+`make -C game release` runs the tests and creates `game/dist/cipherspace-chapter1-v0.3.1.zip` and its unpacked folder, including controls, flashing instructions, checksums, test evidence, and an emulator preview. Packaging checks that the ROM is the exact file that passed the playthrough. The v0.1.0, v0.2.0, and v0.3.0 releases are retained. Final releases in `game/dist` can be committed; build output, toolchains, virtual environments, and generated previews are ignored.
 
 To build and test separately while a live preview uses the default ROM, choose another output directory:
 
 ```sh
-make -C game BUILD_DIR=build/immersive-review test
-make -C game BUILD_DIR=build/immersive-review release
+make -C game BUILD_DIR=build/reading-review test
+make -C game BUILD_DIR=build/reading-review release
 ```
 
 The ROM, objects, report, and screenshots all use that directory. Packaging receives it through `CIPHERSPACE_BUILD_DIR`. Avoid rebuilding the default ROM during an active live preview.
@@ -129,3 +131,13 @@ After flashing completes, disconnect USB and power-cycle the console. Check name
 The CLI's optional `live-demo` runs an emulator on the computer and streams it to Chromatic. It is useful for checking the display and controls, but the final acceptance check must boot the written cartridge directly.
 
 See [ModRetro's updater instructions](https://support.modretro.com/en_us/chromatic-firmware-updater-ryhoYnzCx) and [GBDK's cartridge/save documentation](https://gbdk.org/docs/api/docs_rombanking_mbcs.html) for hardware details.
+
+## Commit messages
+
+Every commit includes a `Changes:` section with concrete bullets describing the change. Use a short subject followed by this body format:
+
+```text
+Changes:
+- Adds padding to the name picker
+- Visually distinguishes action buttons from their calls
+```

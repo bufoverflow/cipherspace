@@ -8,6 +8,7 @@ uint8_t ui_mode, selection, slot, choice, hint_step, word_index, wrong, has_save
 uint8_t name_choice, name_length, name_error;
 uint8_t launch_count, render_tile_offset;
 uint8_t anim_frame, ticker_offset, nav_ready;
+uint8_t book_turn, book_direction;
 uint16_t scene_ticks;
 uint16_t render_art_palettes[28];
 const char letters[8] = "OPENMHI";
@@ -88,12 +89,15 @@ void load_flight(void) NONBANKED {
     SWITCH_ROM(bank);
 }
 
-void load_alias(uint8_t tile,uint8_t source) NONBANKED {
+void load_ui_tile(uint8_t tile,const uint8_t *bits) NONBANKED {
     big_valid[((tile-144)>>2)+(render_tile_offset?12:0)]=0;
     VBK_REG=1;
-    vmemcpy((uint8_t *)(0x8000u+((uint16_t)(tile+render_tile_offset)<<4)),
-        (uint8_t *)(ui_tiles+((uint16_t)source<<4)),16);
+    vmemcpy((uint8_t *)(0x8000u+((uint16_t)(tile+render_tile_offset)<<4)),(uint8_t *)bits,16);
     VBK_REG=0;
+}
+
+void load_alias(uint8_t tile,uint8_t source) NONBANKED {
+    load_ui_tile(tile,ui_tiles+((uint16_t)source<<4));
 }
 
 void load_big(uint8_t tile, uint8_t symbol, uint8_t is_letter, uint8_t inverse) NONBANKED {
@@ -125,7 +129,7 @@ void sprite_position(void) {
         }
     }else{
         for(i=0;i<4;i++){
-            set_sprite_tile(i,240+i);set_sprite_prop(i,0);
+            set_sprite_tile(i,240+i);set_sprite_prop(i,3);
             move_sprite(i,x+(i&1)*8,y+8+(i>>1)*8);
         }
     }
@@ -197,7 +201,7 @@ static void begin_name(uint8_t next) {
 static void new_game(void) {
     memset(&game,0,sizeof(Game));memset(game.answers,255,21);
     game.scene=YARD;game.ship_x=24;game.ship_y=75;game.sound=1;
-    ui_mode=PLAY;slot=choice=selection=wrong=undo_count=launch_count=0;
+    ui_mode=PLAY;slot=choice=selection=wrong=undo_count=launch_count=book_turn=0;
     begin_name(YARD);
 }
 
@@ -243,7 +247,7 @@ static void audio_tick(void) {
 
 static void enter(uint8_t next) {
     game.scene=next;game.card=0;slot=choice=wrong=undo_count=launch_count=0;ui_mode=PLAY;
-    scene_ticks=anim_frame=ticker_offset=nav_ready=0;last_tick=sys_time;
+    scene_ticks=anim_frame=ticker_offset=nav_ready=book_turn=0;last_tick=sys_time;
     save_game();sound_cue(1);render_game();
 }
 
@@ -374,7 +378,7 @@ static void input(uint8_t keys) {
             if(has_save){
                 game.scene=resume_scene;
                 if(!game.name[0])begin_name(game.scene);else focus_puzzle();
-                scene_ticks=anim_frame=ticker_offset=nav_ready=0;last_tick=sys_time;
+                scene_ticks=anim_frame=ticker_offset=nav_ready=book_turn=0;last_tick=sys_time;
             }else new_game();
             sound_cue(2);render_game();
         }
@@ -386,6 +390,20 @@ static void input(uint8_t keys) {
     if(keys&J_SELECT){ui_mode=HELP_MENU;selection=0;word_index=scene_word();render_game();return;}
     p=puzzle_id();
     if(p!=255){puzzle_input(keys,p);return;}
+    if(game.scene==OWNER_LOG){
+        if(book_turn||!(keys&(J_A|J_B)))return;
+        if(keys&J_B){
+            if(!game.card)return;
+            game.card--;book_direction=0;
+        }else{
+            if(game.card==2){enter(MOON_NOTE);return;}
+            game.card++;book_direction=1;
+        }
+        book_turn=24;scene_ticks=anim_frame=0;last_tick=sys_time;
+        save_game();sound_cue(0);render_game();
+        /* The turn starts when its first frame is visible, after loading art. */
+        last_tick=sys_time;return;
+    }
     if(!(keys&J_A))return;
     switch(game.scene) {
         case YARD: enter(DOOR_NOTE);break;
@@ -394,8 +412,12 @@ static void input(uint8_t keys) {
         case REPAIR: enter(CRYSTAL_REPAIR);break;
         case SHIP_WAKE: if(game.card)enter(EMPTY_SEAT);break;
         case EMPTY_SEAT:
-            if(!game.card){game.card=1;save_game();render_game();}else enter(OWNER_LOG);break;
-        case OWNER_LOG: if(game.card)enter(MOON_NOTE);break;
+            if(scene_ticks<90)break;
+            if(!game.card){
+                game.card=1;scene_ticks=anim_frame=0;last_tick=sys_time;
+                save_game();render_game();
+            }else enter(OWNER_LOG);
+            break;
         case MOON_NOTE: if(game.card)enter(DESTINATION);break;
         case LAUNCH: if(!game.card)enter(BOARDING);else start_launch();break;
         case MOON_APPROACH:
@@ -427,9 +449,7 @@ static void animation_tick(void) {
     if(p!=255){
         if(is_solved(p)){
             if(scene_ticks>=60){enter(p==0?HATCH_OPEN:p==1?LAUNCH:FRIENDSHIP);return;}
-        }else if(ticker_offset!=(uint8_t)(scene_ticks/12)){
-            ticker_offset=(uint8_t)(scene_ticks/12);render_game();
-        }
+        }else if(before!=anim_frame)render_game();
         return;
     }
     switch(game.scene){
@@ -446,8 +466,14 @@ static void animation_tick(void) {
             if(!game.card&&scene_ticks>=180){finish_animation();sound_cue(2);return;}
             redraw=!game.card;break;
         case OWNER_LOG:
-            if(!game.card&&scene_ticks>=360){finish_animation();return;}
-            redraw=!game.card;break;
+            if(book_turn){
+                book_turn=elapsed<book_turn?book_turn-elapsed:0;
+                if(!book_turn){render_game();return;}
+            }
+            /* Fall through: a page stays open until the reader turns it. */
+        case EMPTY_SEAT:
+            /* Reading beats wait for a fresh button press, however long it takes. */
+            redraw=1;break;
         case BOARDING:
             if(scene_ticks>=120){
                 game.scene=LAUNCH;game.card=1;scene_ticks=anim_frame=0;
